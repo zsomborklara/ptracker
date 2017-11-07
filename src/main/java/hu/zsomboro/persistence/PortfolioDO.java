@@ -2,6 +2,7 @@ package hu.zsomboro.persistence;
 
 import com.google.common.collect.Sets;
 import hu.zsomboro.common.Constants;
+import hu.zsomboro.core.Portfolio;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -37,5 +38,13 @@ public class PortfolioDO {
 
   public void setConstituents(Set<ConstituentDO> constituents) {
     this.constituents = constituents;
+  }
+
+  public Portfolio toCoreObject() {
+    Portfolio.Builder builder = new Portfolio.Builder();
+    for (ConstituentDO cdo : constituents) {
+      cdo.addCoreObject(builder);
+    }
+    return builder.build();
   }
 }

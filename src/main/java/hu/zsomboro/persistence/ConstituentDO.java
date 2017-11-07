@@ -1,5 +1,7 @@
 package hu.zsomboro.persistence;
 
+import hu.zsomboro.core.Portfolio;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -43,5 +45,9 @@ public class ConstituentDO {
 
   public void setNumber(int number) {
     this.number = number;
+  }
+
+  public void addCoreObject(Portfolio.Builder builder) {
+    builder.add(instrument.toCoreObject(), number);
   }
 }

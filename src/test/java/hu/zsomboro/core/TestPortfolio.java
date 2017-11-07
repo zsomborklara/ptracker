@@ -1,6 +1,8 @@
 package hu.zsomboro.core;
 
 import com.google.common.collect.Sets;
+import hu.zsomboro.persistence.ConstituentDO;
+import hu.zsomboro.persistence.PortfolioDO;
 import org.hamcrest.Matcher;
 import org.junit.Assert;
 import org.junit.Before;
@@ -68,5 +70,23 @@ public class TestPortfolio {
     Assert.assertEquals(2, mutated.getConstituents().size());
     Assert.assertNotNull(mutated.getConstituent(newInstrument));
     Assert.assertEquals(5, mutated.getConstituent(newInstrument).getNumber());
+  }
+
+  @Test
+  public void testConvertPrtfolioToDataObject() {
+    PortfolioDO pdo = initial.toDataObject();
+    for (Portfolio.Constituent constituent : initial.getConstituents()) {
+      boolean found = false;
+      for (ConstituentDO cdo : pdo.getConstituents()) {
+        if(cdo.getInstrument().getIdentifier().equals(
+            constituent.getInstrument().getIdentifier())) {
+          Assert.assertEquals(constituent.getNumber(), cdo.getNumber());
+          Assert.assertEquals(constituent.getInstrument().getName(), cdo.getInstrument().getName());
+          Assert.assertEquals(constituent.getInstrument().getIdType().toString(), cdo.getInstrument().getIdType());
+          found = true;
+        }
+      }
+      Assert.assertTrue(found);
+    }
   }
 }

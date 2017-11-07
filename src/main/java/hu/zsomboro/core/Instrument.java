@@ -1,6 +1,7 @@
 package hu.zsomboro.core;
 
 import com.google.common.base.Preconditions;
+import hu.zsomboro.persistence.InstrumentDO;
 
 public class Instrument {
 
@@ -49,5 +50,9 @@ public class Instrument {
     int result = identifier.hashCode();
     result = 31 * result + idType.hashCode();
     return result;
+  }
+
+  public InstrumentDO toDataObject() {
+    return new InstrumentDO(this.name, this.identifier, this.idType.toString());
   }
 }

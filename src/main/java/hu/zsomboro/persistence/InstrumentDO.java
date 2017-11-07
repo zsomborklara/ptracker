@@ -1,5 +1,8 @@
 package hu.zsomboro.persistence;
 
+import hu.zsomboro.core.IdentifierType;
+import hu.zsomboro.core.Instrument;
+
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -43,5 +46,9 @@ public class InstrumentDO {
 
   public void setIdType(String idType) {
     this.idType = idType;
+  }
+
+  public Instrument toCoreObject() {
+    return new Instrument(this.name, this.identifier, IdentifierType.valueOf(this.idType));
   }
 }

@@ -7,13 +7,16 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
+import hu.zsomboro.persistence.ConstituentDO;
+import hu.zsomboro.persistence.PortfolioDO;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class Portfolio {
 
-  private static final Portfolio EMPTY =  new Portfolio();
+  public static final Portfolio EMPTY =  new Portfolio();
 
   private final Set<Constituent> constituents;
 
@@ -72,6 +75,14 @@ public class Portfolio {
     return constituents;
   }
 
+  public PortfolioDO toDataObject() {
+    Set<ConstituentDO> cdos = Sets.newHashSetWithExpectedSize(this.constituents.size());
+    for (Constituent cd : this.constituents) {
+      cdos.add(cd.toDataObject());
+    }
+    return new PortfolioDO(cdos);
+  }
+
   private FluentIterable<Constituent> filterExisting(Constituent existing) {
     return FluentIterable.from(constituents).filter(
         Predicates.not(Predicates.equalTo(existing)));
@@ -109,6 +120,10 @@ public class Portfolio {
 
     public Instrument getInstrument() {
       return instrument;
+    }
+
+    public ConstituentDO toDataObject() {
+      return new ConstituentDO(this.instrument.toDataObject(), this.number);
     }
   }
 

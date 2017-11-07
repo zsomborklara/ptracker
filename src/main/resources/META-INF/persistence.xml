@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+        http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0">
+
+    <persistence-unit name="PortfolioPU">
+        <class>hu.zsomboro.persistence.ConstituentDO</class>
+        <class>hu.zsomboro.persistence.InstrumentDO</class>
+        <class>hu.zsomboro.persistence.PortfolioDO</class>
+        <exclude-unlisted-classes/>
+        <properties>
+            <property name="javax.jdo.option.ConnectionURL" value="jdbc:hsqldb:mem:datanucleus"/>
+            <property name="javax.jdo.option.ConnectionDriverName" value="org.hsqldb.jdbcDriver"/>
+            <property name="javax.jdo.option.Mapping" value="hsql"/>
+            <property name="javax.jdo.option.ConnectionUserName" value="sa"/>
+            <property name="javax.jdo.option.ConnectionPassword" value=""/>
+            <property name="javax.jdo.option.DetachAllOnCommit" value="true"/>
+            <property name="datanucleus.autoCreateSchema" value="true"/>
+            <property name="datanucleus.schema.autoCreateTables" value="true"/>
+            <property name="datanucleus.validateTables" value="false"/>
+            <property name="datanucleus.validateConstraints" value="false"/>
+        </properties>
+    </persistence-unit>
+</persistence>

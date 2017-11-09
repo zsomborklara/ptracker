@@ -8,16 +8,19 @@ public class Instrument {
   private final String name;
   private final String identifier;
   private final IdentifierType idType;
+  private final InstrumentType instrumentType;
 
-  public Instrument(String name, String identifier, IdentifierType idType) {
+  public Instrument(String name, String identifier, IdentifierType idType, InstrumentType instrumentType) {
 
     Preconditions.checkNotNull(name, "Instrument name is missing");
     Preconditions.checkNotNull(identifier, "Instrument identifier is missing");
     Preconditions.checkNotNull(idType, "Instrument identifier type is missing");
+    Preconditions.checkNotNull(instrumentType, "Instrument type is missing");
 
     this.name = name;
     this.identifier = identifier;
     this.idType = idType;
+    this.instrumentType = instrumentType;
   }
 
   public String getName() {
@@ -30,6 +33,10 @@ public class Instrument {
 
   public IdentifierType getIdType() {
     return idType;
+  }
+
+  public InstrumentType getInstrumentType() {
+    return instrumentType;
   }
 
   @Override
@@ -53,6 +60,7 @@ public class Instrument {
   }
 
   public InstrumentDO toDataObject() {
-    return new InstrumentDO(this.name, this.identifier, this.idType.toString());
+    return new InstrumentDO(this.name, this.identifier,
+        this.idType.toString(), this.instrumentType.toString());
   }
 }

@@ -2,26 +2,27 @@ package hu.zsomboro.persistence;
 
 import hu.zsomboro.core.IdentifierType;
 import hu.zsomboro.core.Instrument;
+import hu.zsomboro.core.InstrumentType;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class InstrumentDO {
 
-  @Persistent(defaultFetchGroup = "true")
   private String name;
   @PrimaryKey
   @Persistent
   private String identifier;
-  @Persistent(defaultFetchGroup = "true")
   private String idType;
+  private String instrumentType;
 
-  public InstrumentDO(String name, String identifier, String idType) {
+  public InstrumentDO(String name, String identifier, String idType, String instrumentType) {
     this.name = name;
     this.identifier = identifier;
     this.idType = idType;
+    this.instrumentType = instrumentType;
   }
 
   public String getName() {
@@ -48,7 +49,16 @@ public class InstrumentDO {
     this.idType = idType;
   }
 
+  public String getInstrumentType() {
+    return instrumentType;
+  }
+
+  public void setInstrumentType(String instrumentType) {
+    this.instrumentType = instrumentType;
+  }
+
   public Instrument toCoreObject() {
-    return new Instrument(this.name, this.identifier, IdentifierType.valueOf(this.idType));
+    return new Instrument(this.name, this.identifier,
+        IdentifierType.valueOf(this.idType), InstrumentType.valueOf(this.instrumentType));
   }
 }

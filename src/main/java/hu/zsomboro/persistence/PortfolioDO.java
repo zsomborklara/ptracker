@@ -4,6 +4,8 @@ import com.google.common.collect.Sets;
 import hu.zsomboro.common.Constants;
 import hu.zsomboro.core.Portfolio;
 
+import javax.jdo.annotations.FetchGroup;
+import javax.jdo.annotations.FetchPlan;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -11,7 +13,7 @@ import javax.jdo.annotations.PrimaryKey;
 import java.util.HashSet;
 import java.util.Set;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class PortfolioDO {
 
   @PrimaryKey

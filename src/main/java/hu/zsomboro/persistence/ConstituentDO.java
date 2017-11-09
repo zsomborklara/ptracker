@@ -2,12 +2,15 @@ package hu.zsomboro.persistence;
 
 import hu.zsomboro.core.Portfolio;
 
+import javax.jdo.annotations.FetchGroup;
+import javax.jdo.annotations.FetchPlan;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
+@FetchPlan(maxFetchDepth = 3)
 public class ConstituentDO {
 
   @PrimaryKey
@@ -15,7 +18,6 @@ public class ConstituentDO {
   private long id;
   @Persistent(defaultFetchGroup = "true")
   private InstrumentDO instrument;
-  @Persistent(defaultFetchGroup = "true")
   private int number;
 
   public ConstituentDO(InstrumentDO instrument, int number) {

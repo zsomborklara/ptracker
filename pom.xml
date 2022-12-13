@@ -12,6 +12,7 @@
 		<guava.version>31.1-jre</guava.version>
 		<hsqldb.version>2.7.1</hsqldb.version>
 		<jaxb-api.version>2.1</jaxb-api.version>
+		<surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
 	</properties>
 	<build>
 		<plugins>
@@ -27,6 +28,11 @@
 					<source>17</source>
 					<target>17</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire-plugin.version}</version>
 			</plugin>
 		</plugins>
 	</build>

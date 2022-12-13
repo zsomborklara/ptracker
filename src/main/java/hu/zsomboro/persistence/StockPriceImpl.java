@@ -1,12 +1,9 @@
 package hu.zsomboro.persistence;
 
-import com.google.common.collect.Sets;
-import hu.zsomboro.core.Instrument;
-import hu.zsomboro.core.Price;
-
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.Set;
+
+import hu.zsomboro.core.Price;
 
 public class StockPriceImpl implements StockPriceDao {
 

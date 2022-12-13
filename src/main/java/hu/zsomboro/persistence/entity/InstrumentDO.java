@@ -1,22 +1,20 @@
-package hu.zsomboro.persistence;
+package hu.zsomboro.persistence.entity;
 
 import hu.zsomboro.core.IdentifierType;
 import hu.zsomboro.core.Instrument;
 import hu.zsomboro.core.InstrumentType;
 
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-@PersistenceCapable(detachable = "true")
+@Entity
 public class InstrumentDO {
 
-  private String name;
-  @PrimaryKey
-  @Persistent
+  @Id
   private String identifier;
   private String idType;
   private String instrumentType;
+  private String name;
 
   public InstrumentDO(String name, String identifier, String idType, String instrumentType) {
     this.name = name;

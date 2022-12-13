@@ -1,35 +1,33 @@
 package hu.zsomboro.core;
 
+import java.util.Set;
+
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import hu.zsomboro.persistence.ConstituentDO;
-import hu.zsomboro.persistence.PortfolioDO;
 
-import java.util.HashSet;
-import java.util.Set;
+import hu.zsomboro.persistence.entity.ConstituentDO;
+import hu.zsomboro.persistence.entity.PortfolioDO;
 
 public class Portfolio {
 
-  public static final Portfolio EMPTY =  new Portfolio();
+  public static final Portfolio EMPTY = new Portfolio();
 
   private final Set<Constituent> constituents;
 
-  public Portfolio(Set<Constituent> instruments) {
-    this.constituents = ImmutableSet.copyOf(instruments);
+  public Portfolio(Set<Constituent> constituents) {
+    this.constituents = ImmutableSet.copyOf(constituents);
   }
 
   private Portfolio() {
-    constituents =  ImmutableSet.of();
+    constituents = ImmutableSet.of();
   }
 
   public Portfolio empty() {
-   return EMPTY;
+    return EMPTY;
   }
 
   public Constituent getConstituent(Instrument instrument) {
@@ -43,8 +41,7 @@ public class Portfolio {
     Constituent existing = getConstituent(instrument);
 
     if (existing != null) {
-      builder.addAll(
-          filterExisting(existing));
+      builder.addAll(filterExisting(existing));
       builder.add(existing.add(number));
     } else {
       builder.addAll(constituents);
@@ -84,8 +81,7 @@ public class Portfolio {
   }
 
   private FluentIterable<Constituent> filterExisting(Constituent existing) {
-    return FluentIterable.from(constituents).filter(
-        Predicates.not(Predicates.equalTo(existing)));
+    return FluentIterable.from(constituents).filter(Predicates.not(Predicates.equalTo(existing)));
   }
 
   public class Constituent {
@@ -95,21 +91,18 @@ public class Portfolio {
 
     public Constituent(int number, Instrument instrument) {
       Preconditions.checkNotNull(instrument, "Instrument is missing");
-      Preconditions.checkArgument(number >= 0,
-          "Cannot set a negative number of instruments");
+      Preconditions.checkArgument(number >= 0, "Cannot set a negative number of instruments");
       this.number = number;
       this.instrument = instrument;
     }
 
     public Constituent add(int number) {
-      Preconditions.checkArgument(number >= 0,
-          "Cannot add a negative number of instruments");
+      Preconditions.checkArgument(number >= 0, "Cannot add a negative number of instruments");
       return new Constituent(this.number + number, this.instrument);
     }
 
-    public  Constituent substract(int number) {
-      Preconditions.checkArgument(number > 0,
-          "Cannot substract a negative number of instruments");
+    public Constituent substract(int number) {
+      Preconditions.checkArgument(number > 0, "Cannot substract a negative number of instruments");
       Preconditions.checkState(this.number > number);
       return new Constituent(this.number - number, this.instrument);
     }

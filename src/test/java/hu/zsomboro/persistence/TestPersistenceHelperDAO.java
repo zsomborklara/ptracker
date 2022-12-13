@@ -1,46 +1,49 @@
 package hu.zsomboro.persistence;
 
-import com.google.common.collect.Sets;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 import java.util.Set;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
+
+import com.google.common.collect.Sets;
+
+import hu.zsomboro.persistence.entity.ConstituentDO;
+import hu.zsomboro.persistence.entity.InstrumentDO;
+import hu.zsomboro.persistence.entity.PortfolioDO;
+
+@DataJpaTest
+@ContextConfiguration
 public class TestPersistenceHelperDAO {
 
-  private static PortfolioDO portfolio;
-  private static PersistenceHelperDAO dao;
+  @Autowired
+  private TestEntityManager entityManager;
+  @Autowired
+  private PersistenceHelperService service;
 
-  @BeforeClass
-  public static void init() {
-    InstrumentDO i1 = new InstrumentDO("inst1", "INST1", "ISIN", "MUTUAL_FUND");
-    InstrumentDO i2 = new InstrumentDO("inst2", "INST2", "ISIN", "STOCK");
+  private InstrumentDO i1 = new InstrumentDO("inst1", "INST1", "ISIN", "MUTUAL_FUND");
+  private InstrumentDO i2 = new InstrumentDO("inst2", "INST2", "ISIN", "STOCK");
 
-    ConstituentDO cdo1 = new ConstituentDO(i1, 10);
-    ConstituentDO cdo2 = new ConstituentDO(i2, 20);
-
-    portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2));
-    dao = new PersistenceHelperImpl();
-    dao.savePortfolio(portfolio);
-  }
-
-  @AfterClass
-  public static void tearDown(){
-    try {
-      dao.removePortfolio(portfolio);
-    }catch (Exception e) {
-      //ignored
-    }
-  }
+  private ConstituentDO cdo1 = new ConstituentDO(i1, 10);
+  private ConstituentDO cdo2 = new ConstituentDO(i2, 20);
 
   @Test
   public void testSavePortfolio() {
-    PortfolioDO newPortfolio = dao.findPortfolio(portfolio.getId());
-    Assert.assertNotNull(newPortfolio);
-    Assert.assertEquals(portfolio.getId(), newPortfolio.getId());
+
+    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2));
+    entityManager.persistAndFlush(portfolio);
+    PortfolioDO newPortfolio = service.findPortfolio(portfolio.getId());
+    assertNotNull(newPortfolio);
+    assertEquals(portfolio.getId(), newPortfolio.getId());
     Set<ConstituentDO> constituents = portfolio.getConstituents();
     Set<ConstituentDO> newConstituents = newPortfolio.getConstituents();
     for (ConstituentDO cdo : constituents) {
@@ -48,27 +51,35 @@ public class TestPersistenceHelperDAO {
       for (ConstituentDO newCdo : newConstituents) {
         if (cdo.getId() == newCdo.getId()) {
           found = true;
-          Assert.assertEquals(cdo.getInstrument().getName(), newCdo.getInstrument().getName());
-          Assert.assertEquals(cdo.getInstrument().getIdentifier(), newCdo.getInstrument().getIdentifier());
-          Assert.assertEquals(cdo.getInstrument().getIdType(), newCdo.getInstrument().getIdType());
-          Assert.assertEquals(cdo.getInstrument().getInstrumentType(), newCdo.getInstrument().getInstrumentType());
-          Assert.assertEquals(cdo.getNumber(), newCdo.getNumber());
+          assertEquals(cdo.getInstrument().getName(), newCdo.getInstrument().getName());
+          assertEquals(cdo.getInstrument().getIdentifier(), newCdo.getInstrument().getIdentifier());
+          assertEquals(cdo.getInstrument().getIdType(), newCdo.getInstrument().getIdType());
+          assertEquals(cdo.getInstrument().getInstrumentType(), newCdo.getInstrument().getInstrumentType());
+          assertEquals(cdo.getNumber(), newCdo.getNumber());
         }
       }
-      Assert.assertTrue(found);
+      assertTrue(found);
     }
   }
 
   @Test
   public void testGetStockInstruments() {
 
-    final Collection<InstrumentDO> existingStocks = dao.getAllStockInstruments();
-    Assert.assertEquals(1, existingStocks.size());
+    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2));
+    entityManager.persist(portfolio);
+    final Collection<InstrumentDO> existingStocks = service.getAllStockInstruments();
+    assertEquals(1, existingStocks.size());
     InstrumentDO stockInstrument = existingStocks.iterator().next();
-    Assert.assertEquals("STOCK", stockInstrument.getInstrumentType());
-    Assert.assertEquals("INST2", stockInstrument.getIdentifier());
-    Assert.assertEquals("ISIN", stockInstrument.getIdType());
-    Assert.assertEquals("inst2", stockInstrument.getName());
+    assertEquals("STOCK", stockInstrument.getInstrumentType());
+    assertEquals("INST2", stockInstrument.getIdentifier());
+    assertEquals("ISIN", stockInstrument.getIdType());
+    assertEquals("inst2", stockInstrument.getName());
+
+  }
+
+  @Configuration
+  @ComponentScan(basePackages = { "hu.zsomboro" })
+  public static class SpringConfig {
 
   }
 }

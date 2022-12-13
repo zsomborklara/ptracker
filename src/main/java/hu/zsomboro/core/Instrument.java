@@ -1,7 +1,8 @@
 package hu.zsomboro.core;
 
 import com.google.common.base.Preconditions;
-import hu.zsomboro.persistence.InstrumentDO;
+
+import hu.zsomboro.persistence.entity.InstrumentDO;
 
 public class Instrument {
 

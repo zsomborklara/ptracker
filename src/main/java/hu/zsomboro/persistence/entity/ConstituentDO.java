@@ -1,22 +1,22 @@
-package hu.zsomboro.persistence;
+package hu.zsomboro.persistence.entity;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import hu.zsomboro.core.Portfolio;
 
-import javax.jdo.annotations.FetchGroup;
-import javax.jdo.annotations.FetchPlan;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
-
-@PersistenceCapable(detachable = "true")
-@FetchPlan(maxFetchDepth = 3)
+@Entity
 public class ConstituentDO {
 
-  @PrimaryKey
-  @Persistent(valueStrategy = IdGeneratorStrategy.INCREMENT)
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
-  @Persistent(defaultFetchGroup = "true")
+  @OneToOne(targetEntity = InstrumentDO.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private InstrumentDO instrument;
   private int number;
 

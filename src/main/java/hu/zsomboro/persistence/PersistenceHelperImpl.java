@@ -1,109 +1,49 @@
 package hu.zsomboro.persistence;
 
-import hu.zsomboro.common.Constants;
-import hu.zsomboro.core.InstrumentType;
-import hu.zsomboro.core.Portfolio;
+import java.util.Collection;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
-import javax.jdo.FetchPlan;
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import hu.zsomboro.core.InstrumentType;
+import hu.zsomboro.persistence.entity.InstrumentDO;
+import hu.zsomboro.persistence.entity.PortfolioDO;
+import hu.zsomboro.persistence.repository.InstrumentDORepository;
+import hu.zsomboro.persistence.repository.PortfolioDORepository;
 
-public class PersistenceHelperImpl implements PersistenceHelperDAO {
+@Service
+public class PersistenceHelperImpl implements PersistenceHelperService {
 
   private static final Logger LOG = LogManager.getLogger(PersistenceHelperImpl.class);
-  private final PersistenceManagerFactory pmf;
 
-  public PersistenceHelperImpl(PersistenceManagerFactory pmf) {
-    this.pmf = pmf;
+  private final PortfolioDORepository portfolioRepository;
+  private final InstrumentDORepository instrumentRepositry;
+
+  public PersistenceHelperImpl(PortfolioDORepository portfolioRepository, InstrumentDORepository instrumentRepositry) {
+    super();
+    this.portfolioRepository = portfolioRepository;
+    this.instrumentRepositry = instrumentRepositry;
   }
 
-  public PersistenceHelperImpl(String persistenceUnitName) {
-    pmf = JDOHelper.getPersistenceManagerFactory(persistenceUnitName);
-  }
-
-  public PersistenceHelperImpl() {
-    pmf = JDOHelper.getPersistenceManagerFactory(Constants.PORTFOLIO_PERSISTENCE_UNIT);
-  }
-
+  @Override
   public PortfolioDO findPortfolio(long portfolioId) {
-    PersistenceManager manager = getPersistenceManager();
-    Transaction tx = manager.currentTransaction();
-    try {
-      tx.begin();
-      manager.getFetchPlan().setMaxFetchDepth(3);
-      Query<PortfolioDO> q = manager.<PortfolioDO>newQuery(PortfolioDO.class);
-      q.filter("id == " + portfolioId);
-      PortfolioDO portfolio = q.executeUnique();
-      tx.commit();
-      return portfolio;
-    } finally {
-      if (tx.isActive()) {
-        tx.rollback();
-      }
-      manager.close();
-    }
+    return portfolioRepository.findById(portfolioId);
   }
 
+  @Override
   public void savePortfolio(PortfolioDO portfolio) {
-    final PersistenceManager manager = getPersistenceManager();
-    Transaction tx = manager.currentTransaction();
-    try {
-      tx.begin();
-      manager.getFetchPlan().setMaxFetchDepth(3);
-      manager.makePersistent(portfolio);
-      tx.commit();
-    } finally {
-      if (tx.isActive()) {
-        tx.rollback();
-      }
-      manager.close();
-    }
+    portfolioRepository.save(portfolio);
   }
 
+  @Override
   public void removePortfolio(PortfolioDO portfolio) {
-    final PersistenceManager manager = getPersistenceManager();
-    Transaction tx = manager.currentTransaction();
-    try {
-      tx.begin();
-      portfolio.setConstituents(Collections.emptySet());
-      manager.deletePersistent(portfolio);
-      tx.commit();
-    } finally {
-      if (tx.isActive()) {
-        tx.rollback();
-      }
-      manager.close();
-    }
+    portfolioRepository.delete(portfolio);
   }
 
   @Override
   public Collection<InstrumentDO> getAllStockInstruments() {
-    PersistenceManager pm = getPersistenceManager();
-    Transaction tx = pm.currentTransaction();
-    try {
-      tx.begin();
-      Query<InstrumentDO> q = pm.<InstrumentDO>newQuery(InstrumentDO.class);
-      q.filter("instrumentType == '" + InstrumentType.STOCK.toString() + "'");
-      List<InstrumentDO> instruments = q.executeList();
-      tx.commit();
-      return instruments;
-    } finally {
-      if (tx.isActive()) {
-        tx.rollback();
-      }
-      pm.close();
-    }
+    return instrumentRepositry.findByInstrumentType(InstrumentType.STOCK.toString());
   }
 
-  private PersistenceManager getPersistenceManager() {
-    return pmf.getPersistenceManager();
-  }
 }

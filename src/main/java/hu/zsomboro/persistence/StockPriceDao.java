@@ -1,6 +1,5 @@
 package hu.zsomboro.persistence;
 
-import hu.zsomboro.core.Instrument;
 import hu.zsomboro.core.Price;
 
 import java.time.LocalDate;

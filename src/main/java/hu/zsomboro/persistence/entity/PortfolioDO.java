@@ -1,25 +1,26 @@
-package hu.zsomboro.persistence;
+package hu.zsomboro.persistence.entity;
 
-import com.google.common.collect.Sets;
-import hu.zsomboro.common.Constants;
-import hu.zsomboro.core.Portfolio;
-
-import javax.jdo.annotations.FetchGroup;
-import javax.jdo.annotations.FetchPlan;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
-import java.util.HashSet;
 import java.util.Set;
 
-@PersistenceCapable(detachable = "true")
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.google.common.collect.Sets;
+
+import hu.zsomboro.core.Portfolio;
+
+@Entity
 public class PortfolioDO {
 
-  @PrimaryKey
-  @Persistent(valueStrategy = IdGeneratorStrategy.INCREMENT)
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
-  @Persistent(defaultFetchGroup = "true")
+  @OneToMany(targetEntity = ConstituentDO.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private Set<ConstituentDO> constituents;
 
   public PortfolioDO(Set<ConstituentDO> constituents) {

@@ -1,5 +1,6 @@
 package hu.zsomboro.core;
 
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
@@ -7,6 +8,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import hu.zsomboro.persistence.entity.ConstituentDO;
@@ -22,6 +24,12 @@ public class Portfolio {
     this.constituents = ImmutableSet.copyOf(constituents);
   }
 
+  public Portfolio(Map<Instrument, Integer> instruments) {
+    final ImmutableSet.Builder<Constituent> builder = ImmutableSet.<Constituent>builder();
+    instruments.entrySet().stream().map(e -> new Constituent(e.getValue(), e.getKey())).forEach(c -> builder.add(c));
+    constituents = builder.build();
+  }
+
   private Portfolio() {
     constituents = ImmutableSet.of();
   }
@@ -34,15 +42,19 @@ public class Portfolio {
     return Iterables.find(constituents, c -> c.instrument.equals(instrument), null);
   }
 
+  public boolean hasInstrument(Instrument instrument) {
+    return constituents.stream().anyMatch(c -> c.instrument.equals(instrument));
+  }
+
   public Portfolio add(final Instrument instrument, int number) {
 
     final ImmutableSet.Builder<Constituent> builder = ImmutableSet.<Constituent>builder();
 
-    Constituent existing = getConstituent(instrument);
+    Constituent current = getConstituent(instrument);
+    if (current != null) {
 
-    if (existing != null) {
-      builder.addAll(filterExisting(existing));
-      builder.add(existing.add(number));
+      builder.addAll(filter(current));
+      builder.add(current.add(number));
     } else {
       builder.addAll(constituents);
       builder.add(new Constituent(number, instrument));
@@ -53,19 +65,20 @@ public class Portfolio {
 
   public Portfolio remove(Instrument instrument, int number) {
 
-    final ImmutableSet.Builder<Constituent> builder = ImmutableSet.<Constituent>builder();
+    Constituent current = getConstituent(instrument);
 
-    Constituent existing = getConstituent(instrument);
-
-    if (existing != null) {
-      builder.addAll(filterExisting(existing));
-      if (existing.number != number) {
-        builder.add(existing.substract(number));
+    if (current != null) {
+      final ImmutableSet.Builder<Constituent> builder = ImmutableSet.<Constituent>builder();
+      builder.addAll(filter(current));
+      Constituent substracted = current.substract(number);
+      if (substracted.number != 0) {
+        builder.add(substracted);
       }
-    } else {
-      builder.addAll(constituents);
+      ImmutableSet<Constituent> newConstituents = builder.build();
+      return newConstituents.isEmpty() ? Portfolio.EMPTY : new Portfolio(newConstituents);
     }
-    return new Portfolio(builder.build());
+
+    return this;
   }
 
   public Set<Constituent> getConstituents() {
@@ -80,7 +93,7 @@ public class Portfolio {
     return new PortfolioDO(cdos);
   }
 
-  private FluentIterable<Constituent> filterExisting(Constituent existing) {
+  private FluentIterable<Constituent> filter(Constituent existing) {
     return FluentIterable.from(constituents).filter(Predicates.not(Predicates.equalTo(existing)));
   }
 
@@ -103,7 +116,7 @@ public class Portfolio {
 
     public Constituent substract(int number) {
       Preconditions.checkArgument(number > 0, "Cannot substract a negative number of instruments");
-      Preconditions.checkState(this.number > number);
+      Preconditions.checkState(this.number >= number);
       return new Constituent(this.number - number, this.instrument);
     }
 
@@ -122,17 +135,23 @@ public class Portfolio {
 
   public static class Builder {
 
-    private Portfolio interimPortfolio = Portfolio.EMPTY;
+    private Map<Instrument, Integer> instruments = Maps.newHashMap();
 
     public Builder add(Instrument instrument, int number) {
-      interimPortfolio = interimPortfolio.add(instrument, number);
+      Integer current = instruments.get(instrument);
+      if (current != null) {
+        instruments.put(instrument, current + number);
+      } else {
+        instruments.put(instrument, number);
+      }
       return this;
     }
 
     public Portfolio build() {
-      Portfolio toReturn = interimPortfolio;
-      interimPortfolio = Portfolio.EMPTY;
-      return toReturn;
+
+      Portfolio portfolio = new Portfolio(instruments);
+      instruments.clear();
+      return portfolio;
     }
   }
 }

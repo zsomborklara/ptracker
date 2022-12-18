@@ -2,7 +2,5 @@ package hu.zsomboro.core;
 
 public enum InstrumentType {
 
-  STOCK,
-  MUTUAL_FUND,
-  TREASURY_BOND
+  STOCK, TREASURY_BOND, CASH, DEPOSIT, PENSION_FUND, EXCHANGE_TRADED_FUND
 }

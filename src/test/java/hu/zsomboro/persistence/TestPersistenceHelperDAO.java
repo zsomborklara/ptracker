@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Set;
 
@@ -18,6 +19,8 @@ import org.springframework.test.context.ContextConfiguration;
 import com.google.common.collect.Sets;
 
 import hu.zsomboro.persistence.entity.ConstituentDO;
+import hu.zsomboro.persistence.entity.EquitySecurityDO;
+import hu.zsomboro.persistence.entity.FixedIncomeSecurityDO;
 import hu.zsomboro.persistence.entity.InstrumentDO;
 import hu.zsomboro.persistence.entity.PortfolioDO;
 
@@ -30,8 +33,8 @@ public class TestPersistenceHelperDAO {
   @Autowired
   private PersistenceHelperService service;
 
-  private InstrumentDO i1 = new InstrumentDO("inst1", "INST1", "ISIN", "MUTUAL_FUND");
-  private InstrumentDO i2 = new InstrumentDO("inst2", "INST2", "ISIN", "STOCK");
+  private InstrumentDO i1 = new EquitySecurityDO("inst1", "INST1", "EXCHANGE_TRADED_FUND");
+  private InstrumentDO i2 = new FixedIncomeSecurityDO("inst2", "INST2", "STOCK", LocalDate.now(), 2.3d);
 
   private ConstituentDO cdo1 = new ConstituentDO(i1, 10);
   private ConstituentDO cdo2 = new ConstituentDO(i2, 20);
@@ -53,9 +56,14 @@ public class TestPersistenceHelperDAO {
           found = true;
           assertEquals(cdo.getInstrument().getName(), newCdo.getInstrument().getName());
           assertEquals(cdo.getInstrument().getIdentifier(), newCdo.getInstrument().getIdentifier());
-          assertEquals(cdo.getInstrument().getIdType(), newCdo.getInstrument().getIdType());
           assertEquals(cdo.getInstrument().getInstrumentType(), newCdo.getInstrument().getInstrumentType());
           assertEquals(cdo.getNumber(), newCdo.getNumber());
+          if (newCdo.getInstrument() instanceof FixedIncomeSecurityDO) {
+            assertEquals(((FixedIncomeSecurityDO) cdo.getInstrument()).getInterestRate(),
+                ((FixedIncomeSecurityDO) newCdo.getInstrument()).getInterestRate(), 1e-15);
+            assertEquals(((FixedIncomeSecurityDO) cdo.getInstrument()).getMaturity(),
+                ((FixedIncomeSecurityDO) newCdo.getInstrument()).getMaturity());
+          }
         }
       }
       assertTrue(found);
@@ -72,7 +80,6 @@ public class TestPersistenceHelperDAO {
     InstrumentDO stockInstrument = existingStocks.iterator().next();
     assertEquals("STOCK", stockInstrument.getInstrumentType());
     assertEquals("INST2", stockInstrument.getIdentifier());
-    assertEquals("ISIN", stockInstrument.getIdType());
     assertEquals("inst2", stockInstrument.getName());
 
   }

@@ -1,25 +1,24 @@
 package hu.zsomboro.persistence.entity;
 
-import hu.zsomboro.core.IdentifierType;
-import hu.zsomboro.core.Instrument;
-import hu.zsomboro.core.InstrumentType;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
+import hu.zsomboro.core.Instrument;
+
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
-public class InstrumentDO {
+public abstract class InstrumentDO {
 
   @Id
   private String identifier;
-  private String idType;
   private String instrumentType;
   private String name;
 
-  public InstrumentDO(String name, String identifier, String idType, String instrumentType) {
+  public InstrumentDO(String name, String identifier, String instrumentType) {
     this.name = name;
     this.identifier = identifier;
-    this.idType = idType;
     this.instrumentType = instrumentType;
   }
 
@@ -39,14 +38,6 @@ public class InstrumentDO {
     this.identifier = identifier;
   }
 
-  public String getIdType() {
-    return idType;
-  }
-
-  public void setIdType(String idType) {
-    this.idType = idType;
-  }
-
   public String getInstrumentType() {
     return instrumentType;
   }
@@ -55,8 +46,6 @@ public class InstrumentDO {
     this.instrumentType = instrumentType;
   }
 
-  public Instrument toCoreObject() {
-    return new Instrument(this.name, this.identifier,
-        IdentifierType.valueOf(this.idType), InstrumentType.valueOf(this.instrumentType));
-  }
+  public abstract Instrument toCoreObject();
+
 }

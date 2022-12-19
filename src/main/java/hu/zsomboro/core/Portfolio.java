@@ -11,6 +11,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+import hu.zsomboro.core.security.Instrument;
 import hu.zsomboro.persistence.entity.ConstituentDO;
 import hu.zsomboro.persistence.entity.PortfolioDO;
 

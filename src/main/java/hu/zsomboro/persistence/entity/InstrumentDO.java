@@ -5,7 +5,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
-import hu.zsomboro.core.Instrument;
+import hu.zsomboro.core.security.Instrument;
 
 @Inheritance(strategy = InheritanceType.JOINED)
 @Entity

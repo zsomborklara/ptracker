@@ -1,4 +1,4 @@
-package hu.zsomboro.core;
+package hu.zsomboro.core.security;
 
 import java.time.LocalDate;
 

@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import hu.zsomboro.core.InstrumentType;
+import hu.zsomboro.core.security.InstrumentType;
 import hu.zsomboro.persistence.entity.InstrumentDO;
 import hu.zsomboro.persistence.entity.PortfolioDO;
 import hu.zsomboro.persistence.repository.InstrumentDORepository;

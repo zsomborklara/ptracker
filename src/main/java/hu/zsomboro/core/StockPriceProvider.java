@@ -4,6 +4,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
+
+import hu.zsomboro.core.security.Instrument;
+import hu.zsomboro.core.security.InstrumentType;
 import hu.zsomboro.persistence.StockPriceDao;
 
 import java.time.LocalDate;

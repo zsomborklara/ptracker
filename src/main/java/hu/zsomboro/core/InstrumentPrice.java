@@ -2,6 +2,8 @@ package hu.zsomboro.core;
 
 import java.time.LocalDate;
 
+import hu.zsomboro.core.security.Instrument;
+
 public class InstrumentPrice {
 
   private final LocalDate asOfDate;

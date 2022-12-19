@@ -1,4 +1,4 @@
-package hu.zsomboro.core;
+package hu.zsomboro.core.security;
 
 import com.google.common.base.Preconditions;
 

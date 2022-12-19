@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 import javax.persistence.Entity;
 
-import hu.zsomboro.core.FixedIncomeSecurity;
-import hu.zsomboro.core.InstrumentType;
+import hu.zsomboro.core.security.FixedIncomeSecurity;
+import hu.zsomboro.core.security.InstrumentType;
 
 @Entity
 public class FixedIncomeSecurityDO extends InstrumentDO {
@@ -39,7 +39,7 @@ public class FixedIncomeSecurityDO extends InstrumentDO {
 
   @Override
   public FixedIncomeSecurity toCoreObject() {
-    return new FixedIncomeSecurity(getName(), getIdentifier(), InstrumentType.valueOf(getInstrumentType()), maturity,
-        interestRate);
+    return (FixedIncomeSecurity) InstrumentType.valueOf(getInstrumentType()).create(getName(), getIdentifier(),
+        getMaturity(), getInterestRate());
   }
 }

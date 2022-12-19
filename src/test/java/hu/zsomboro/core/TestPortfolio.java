@@ -11,6 +11,9 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import hu.zsomboro.core.security.EquitySecurity;
+import hu.zsomboro.core.security.FixedIncomeSecurity;
+import hu.zsomboro.core.security.Instrument;
 import hu.zsomboro.persistence.entity.ConstituentDO;
 import hu.zsomboro.persistence.entity.PortfolioDO;
 
@@ -20,8 +23,8 @@ public class TestPortfolio {
 
   @BeforeEach
   public void init() {
-    Instrument i1 = new EquitySecurity("inst1", "INST1", InstrumentType.STOCK);
-    Instrument i2 = new FixedIncomeSecurity("inst2", "INST2", InstrumentType.TREASURY_BOND, LocalDate.now(), 2.3d);
+    Instrument i1 = EquitySecurity.newStock("inst1", "INST1");
+    Instrument i2 = FixedIncomeSecurity.newTBond("inst2", "INST2", LocalDate.now(), 2.3d);
     Portfolio.Builder builder = new Portfolio.Builder();
     builder.add(i1, 10);
     builder.add(i2, 5);
@@ -30,7 +33,7 @@ public class TestPortfolio {
 
   @Test
   public void testAddNewConstituentToPortfolio() {
-    Instrument newInstrument = new EquitySecurity("inst3", "INST3", InstrumentType.EXCHANGE_TRADED_FUND);
+    Instrument newInstrument = EquitySecurity.newETF("inst3", "INST3");
     Portfolio mutated = initial.add(newInstrument, 10);
     assertEquals(3, mutated.getConstituents().size());
     assertNotNull(mutated.getConstituent(newInstrument));
@@ -39,7 +42,7 @@ public class TestPortfolio {
 
   @Test
   public void testAddExistingConstituentToPortfolio() {
-    Instrument newInstrument = new EquitySecurity("inst1", "INST1", InstrumentType.EXCHANGE_TRADED_FUND);
+    Instrument newInstrument = EquitySecurity.newETF("inst1", "INST1");
     Portfolio mutated = initial.add(newInstrument, 10);
     assertEquals(2, mutated.getConstituents().size());
     assertNotNull(mutated.getConstituent(newInstrument));
@@ -49,14 +52,14 @@ public class TestPortfolio {
   @Test
   public void testAddNewConstituentWithWrongNumber() {
     assertThrows(IllegalArgumentException.class, () -> {
-      Instrument newInstrument = new EquitySecurity("inst3", "INST3", InstrumentType.EXCHANGE_TRADED_FUND);
+      Instrument newInstrument = EquitySecurity.newETF("inst3", "INST3");
       Portfolio mutated = initial.add(newInstrument, -10);
     });
   }
 
   @Test
   public void testRemoveMissingConstituentFromPortfolio() {
-    Instrument newInstrument = new EquitySecurity("inst3", "INST3", InstrumentType.EXCHANGE_TRADED_FUND);
+    Instrument newInstrument = EquitySecurity.newETF("inst3", "INST3");
     Portfolio mutated = initial.remove(newInstrument, 10);
     assertEquals(2, mutated.getConstituents().size());
     assertNull(mutated.getConstituent(newInstrument));
@@ -64,7 +67,7 @@ public class TestPortfolio {
 
   @Test
   public void testRemoveExistingConstituentFromPortfolio_Removed() {
-    Instrument newInstrument = new EquitySecurity("inst1", "INST1", InstrumentType.EXCHANGE_TRADED_FUND);
+    Instrument newInstrument = EquitySecurity.newETF("inst1", "INST1");
     Portfolio mutated = initial.remove(newInstrument, 10);
     assertEquals(1, mutated.getConstituents().size());
     assertNull(mutated.getConstituent(newInstrument));
@@ -72,7 +75,7 @@ public class TestPortfolio {
 
   @Test
   public void testRemoveExistingConstituentFromPortfolio_Remains() {
-    Instrument newInstrument = new EquitySecurity("inst1", "INST1", InstrumentType.EXCHANGE_TRADED_FUND);
+    Instrument newInstrument = EquitySecurity.newETF("inst1", "INST1");
     Portfolio mutated = initial.remove(newInstrument, 5);
     assertEquals(2, mutated.getConstituents().size());
     assertNotNull(mutated.getConstituent(newInstrument));

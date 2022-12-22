@@ -18,6 +18,8 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.google.common.collect.Sets;
 
+import hu.zsomboro.core.Cash;
+import hu.zsomboro.persistence.entity.CashDO;
 import hu.zsomboro.persistence.entity.ConstituentDO;
 import hu.zsomboro.persistence.entity.EquitySecurityDO;
 import hu.zsomboro.persistence.entity.FixedIncomeSecurityDO;
@@ -42,11 +44,12 @@ public class TestPersistenceHelperDAO {
   @Test
   public void testSavePortfolio() {
 
-    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2));
+    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("USD", 100.d));
     entityManager.persistAndFlush(portfolio);
     PortfolioDO newPortfolio = service.findPortfolio(portfolio.getId());
     assertNotNull(newPortfolio);
     assertEquals(portfolio.getId(), newPortfolio.getId());
+    assertEquals(portfolio.getCash(), newPortfolio.getCash());
     Set<ConstituentDO> constituents = portfolio.getConstituents();
     Set<ConstituentDO> newConstituents = newPortfolio.getConstituents();
     for (ConstituentDO cdo : constituents) {
@@ -73,7 +76,7 @@ public class TestPersistenceHelperDAO {
   @Test
   public void testGetStockInstruments() {
 
-    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2));
+    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), Cash.ZERO.toDataObject());
     entityManager.persist(portfolio);
     final Collection<InstrumentDO> existingStocks = service.getAllStockInstruments();
     assertEquals(1, existingStocks.size());

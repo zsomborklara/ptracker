@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.google.common.collect.Sets;
 
@@ -22,9 +23,12 @@ public class PortfolioDO {
   private long id;
   @OneToMany(targetEntity = ConstituentDO.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private Set<ConstituentDO> constituents;
+  @OneToOne(targetEntity = CashDO.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private CashDO cash;
 
-  public PortfolioDO(Set<ConstituentDO> constituents) {
+  public PortfolioDO(Set<ConstituentDO> constituents, CashDO cash) {
     this.constituents = Sets.newHashSet(constituents);
+    this.cash = cash;
   }
 
   public long getId() {
@@ -43,11 +47,20 @@ public class PortfolioDO {
     this.constituents = constituents;
   }
 
+  public CashDO getCash() {
+    return cash;
+  }
+
+  public void setCash(CashDO cash) {
+    this.cash = cash;
+  }
+
   public Portfolio toCoreObject() {
     Portfolio.Builder builder = new Portfolio.Builder();
     for (ConstituentDO cdo : constituents) {
       cdo.addCoreObject(builder);
     }
+    cash.addCoreObject(builder);
     return builder.build();
   }
 }

@@ -32,6 +32,14 @@ public class TestPortfolio {
   }
 
   @Test
+  public void testAddCashToPortfolio() {
+    Cash cash = new Cash(100, "USD");
+    Portfolio mutated = initial.add(cash);
+    assertEquals(2, mutated.getConstituents().size());
+    assertEquals(cash, mutated.getCash());
+  }
+
+  @Test
   public void testAddNewConstituentToPortfolio() {
     Instrument newInstrument = EquitySecurity.newETF("inst3", "INST3");
     Portfolio mutated = initial.add(newInstrument, 10);

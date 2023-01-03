@@ -3,6 +3,7 @@ package hu.zsomboro.persistence.entity;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,10 +26,13 @@ public class PortfolioDO {
   private Set<ConstituentDO> constituents;
   @OneToOne(targetEntity = CashDO.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private CashDO cash;
+  @Column(unique = true)
+  private String name;
 
-  public PortfolioDO(Set<ConstituentDO> constituents, CashDO cash) {
+  public PortfolioDO(Set<ConstituentDO> constituents, CashDO cash, String name) {
     this.constituents = Sets.newHashSet(constituents);
     this.cash = cash;
+    this.name = name;
   }
 
   public long getId() {
@@ -55,11 +59,20 @@ public class PortfolioDO {
     this.cash = cash;
   }
 
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public Portfolio toCoreObject() {
     Portfolio.Builder builder = new Portfolio.Builder();
     for (ConstituentDO cdo : constituents) {
       cdo.addCoreObject(builder);
     }
+    builder.withName(name);
     cash.addCoreObject(builder);
     return builder.build();
   }

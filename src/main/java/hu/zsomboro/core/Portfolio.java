@@ -21,22 +21,26 @@ public class Portfolio {
 
   private final Set<Constituent> constituents;
   private final Cash cash;
+  private final String name;
 
-  public Portfolio(Set<Constituent> constituents, Cash cash) {
+  public Portfolio(Set<Constituent> constituents, Cash cash, String name) {
     this.constituents = ImmutableSet.copyOf(constituents);
     this.cash = cash;
+    this.name = name;
   }
 
-  public Portfolio(Map<Instrument, Integer> instruments, Cash cash) {
+  public Portfolio(Map<Instrument, Integer> instruments, Cash cash, String name) {
     final ImmutableSet.Builder<Constituent> builder = ImmutableSet.<Constituent>builder();
     instruments.entrySet().stream().map(e -> new Constituent(e.getValue(), e.getKey())).forEach(c -> builder.add(c));
     constituents = builder.build();
     this.cash = cash;
+    this.name = name;
   }
 
   private Portfolio() {
     constituents = ImmutableSet.of();
     cash = Cash.ZERO;
+    name = "EMPTY";
   }
 
   public Portfolio empty() {
@@ -56,7 +60,7 @@ public class Portfolio {
   }
 
   public Portfolio add(Cash cash) {
-    return new Portfolio(constituents, cash);
+    return new Portfolio(constituents, cash, name);
   }
 
   public Portfolio add(final Instrument instrument, int number) {
@@ -73,7 +77,7 @@ public class Portfolio {
       builder.add(new Constituent(number, instrument));
     }
 
-    return new Portfolio(builder.build(), cash);
+    return new Portfolio(builder.build(), cash, name);
   }
 
   public Portfolio remove(Instrument instrument, int number) {
@@ -88,7 +92,7 @@ public class Portfolio {
         builder.add(substracted);
       }
       ImmutableSet<Constituent> newConstituents = builder.build();
-      return newConstituents.isEmpty() ? Portfolio.EMPTY : new Portfolio(newConstituents, cash);
+      return newConstituents.isEmpty() ? Portfolio.EMPTY : new Portfolio(newConstituents, cash, name);
     }
 
     return this;
@@ -103,7 +107,7 @@ public class Portfolio {
     for (Constituent cd : this.constituents) {
       cdos.add(cd.toDataObject());
     }
-    return new PortfolioDO(cdos, cash.toDataObject());
+    return new PortfolioDO(cdos, cash.toDataObject(), name);
   }
 
   private FluentIterable<Constituent> filter(Constituent existing) {
@@ -150,6 +154,12 @@ public class Portfolio {
 
     private Map<Instrument, Integer> instruments = Maps.newHashMap();
     private Cash cash = Cash.ZERO;
+    private String name;
+
+    public Builder withName(String name) {
+      this.name = name;
+      return this;
+    }
 
     public Builder add(Cash cash) {
       this.cash = cash;
@@ -168,7 +178,7 @@ public class Portfolio {
 
     public Portfolio build() {
 
-      Portfolio portfolio = new Portfolio(instruments, cash);
+      Portfolio portfolio = new Portfolio(instruments, cash, name);
       instruments.clear();
       return portfolio;
     }

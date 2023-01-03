@@ -1,13 +1,20 @@
 package hu.zsomboro.persistence;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.PersistenceException;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,12 +26,15 @@ import org.springframework.test.context.ContextConfiguration;
 import com.google.common.collect.Sets;
 
 import hu.zsomboro.core.Cash;
+import hu.zsomboro.core.security.InstrumentType;
 import hu.zsomboro.persistence.entity.CashDO;
 import hu.zsomboro.persistence.entity.ConstituentDO;
 import hu.zsomboro.persistence.entity.EquitySecurityDO;
 import hu.zsomboro.persistence.entity.FixedIncomeSecurityDO;
 import hu.zsomboro.persistence.entity.InstrumentDO;
 import hu.zsomboro.persistence.entity.PortfolioDO;
+import hu.zsomboro.persistence.repository.InstrumentDORepository;
+import hu.zsomboro.persistence.repository.PortfolioDORepository;
 
 @DataJpaTest
 @ContextConfiguration
@@ -33,7 +43,9 @@ public class TestPersistenceHelperDAO {
   @Autowired
   private TestEntityManager entityManager;
   @Autowired
-  private PersistenceHelperService service;
+  private PortfolioDORepository portfolioRepo;
+  @Autowired
+  private InstrumentDORepository instrumentRepo;
 
   private InstrumentDO i1 = new EquitySecurityDO("inst1", "INST1", "EXCHANGE_TRADED_FUND");
   private InstrumentDO i2 = new FixedIncomeSecurityDO("inst2", "INST2", "STOCK", LocalDate.now(), 2.3d);
@@ -44,9 +56,10 @@ public class TestPersistenceHelperDAO {
   @Test
   public void testSavePortfolio() {
 
-    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("USD", 100.d));
+    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("USD", 100.d),
+        "Dummy");
     entityManager.persistAndFlush(portfolio);
-    PortfolioDO newPortfolio = service.findPortfolio(portfolio.getId());
+    PortfolioDO newPortfolio = portfolioRepo.findById(portfolio.getId());
     assertNotNull(newPortfolio);
     assertEquals(portfolio.getId(), newPortfolio.getId());
     assertEquals(portfolio.getCash(), newPortfolio.getCash());
@@ -74,11 +87,38 @@ public class TestPersistenceHelperDAO {
   }
 
   @Test
+  public void testFindPortfolioByName() {
+
+    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("USD", 100.d),
+        "Dummy");
+    entityManager.persistAndFlush(portfolio);
+    List<PortfolioDO> newPortfolio = portfolioRepo.findByName(portfolio.getName());
+    assertThat(newPortfolio, hasSize(1));
+    assertThat(newPortfolio.get(0).getName(), equalTo("Dummy"));
+  }
+
+  @Test
+  public void testPortfolioNameIsUnique() {
+
+    PortfolioDO portfolio1 = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("USD", 100.d),
+        "Dummy");
+    entityManager.persistAndFlush(portfolio1);
+    Assertions.assertThrows(PersistenceException.class, () -> {
+      PortfolioDO portfolio2 = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("USD", 100.d),
+          "Dummy");
+      entityManager.persistAndFlush(portfolio2);
+    });
+
+  }
+
+  @Test
   public void testGetStockInstruments() {
 
-    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), Cash.ZERO.toDataObject());
+    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), Cash.ZERO.toDataObject(),
+        "Dummy");
     entityManager.persist(portfolio);
-    final Collection<InstrumentDO> existingStocks = service.getAllStockInstruments();
+    final Collection<InstrumentDO> existingStocks = instrumentRepo
+        .findByInstrumentType(InstrumentType.STOCK.toString());
     assertEquals(1, existingStocks.size());
     InstrumentDO stockInstrument = existingStocks.iterator().next();
     assertEquals("STOCK", stockInstrument.getInstrumentType());

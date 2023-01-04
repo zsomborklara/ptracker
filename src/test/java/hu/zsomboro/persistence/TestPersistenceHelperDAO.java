@@ -129,7 +129,7 @@ public class TestPersistenceHelperDAO {
 
   @Configuration
   @ComponentScan(basePackages = { "hu.zsomboro" })
-  public static class SpringConfig {
+  public static class SpringTestConfig {
 
   }
 }

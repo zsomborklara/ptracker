@@ -1,0 +1,7 @@
+---
+request:
+  url: /tracker/portfolio/dummy
+  method: POST
+
+response:
+  status: 204

@@ -11,6 +11,8 @@ public interface PersistenceHelperService {
 
   public void savePortfolio(Portfolio portfolio);
 
+  public void newPortfolio(String name);
+
   public void removePortfolio(Portfolio portfolio);
 
   public Collection<Instrument> getAllStockInstruments();

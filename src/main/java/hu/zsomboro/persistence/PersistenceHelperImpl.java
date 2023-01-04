@@ -1,6 +1,7 @@
 package hu.zsomboro.persistence;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -14,6 +15,7 @@ import hu.zsomboro.core.Portfolio;
 import hu.zsomboro.core.security.Instrument;
 import hu.zsomboro.core.security.InstrumentType;
 import hu.zsomboro.persistence.entity.InstrumentDO;
+import hu.zsomboro.persistence.entity.PortfolioDO;
 import hu.zsomboro.persistence.repository.InstrumentDORepository;
 import hu.zsomboro.persistence.repository.PortfolioDORepository;
 
@@ -33,7 +35,15 @@ public class PersistenceHelperImpl implements PersistenceHelperService {
 
   @Override
   public Portfolio findPortfolio(String name) {
-    return portfolioRepository.findByName(name).get(0).toCoreObject();
+    List<PortfolioDO> foundPortfolios = portfolioRepository.findByName(name);
+    if (foundPortfolios.size() > 1) {
+      throw new IllegalStateException("Multiple porfolios found with name " + name);
+    }
+
+    if (foundPortfolios.isEmpty()) {
+      return Portfolio.EMPTY;
+    }
+    return foundPortfolios.get(0).toCoreObject();
   }
 
   @Override
@@ -52,6 +62,12 @@ public class PersistenceHelperImpl implements PersistenceHelperService {
   public Collection<Instrument> getAllStockInstruments() {
     return instrumentRepositry.findByInstrumentType(InstrumentType.STOCK.toString()).stream()
         .map(InstrumentDO::toCoreObject).collect(Collectors.toList());
+  }
+
+  @Override
+  public void newPortfolio(String name) {
+    Portfolio newPortfolio = new Portfolio.Builder().withName(name).build();
+    portfolioRepository.save(newPortfolio.toDataObject());
   }
 
 }

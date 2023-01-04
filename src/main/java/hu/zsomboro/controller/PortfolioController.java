@@ -18,11 +18,16 @@ import hu.zsomboro.core.security.EquitySecurity;
 import hu.zsomboro.core.security.FixedIncomeSecurity;
 import hu.zsomboro.core.security.Instrument;
 import hu.zsomboro.persistence.PersistenceHelperService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
 @RequestMapping(value = "portfolio")
 public class PortfolioController {
 
+  // swagger UI available on: http://localhost:8080/tracker/swagger-ui/index.html
   private PersistenceHelperService persistenceService;
 
   public PortfolioController(PersistenceHelperService persistenceService) {
@@ -30,17 +35,24 @@ public class PortfolioController {
     this.persistenceService = persistenceService;
   }
 
+  @Operation(summary = "Create a new portfolio with the given name")
+  @ApiResponse(responseCode = "204", description = "Portfolio created, no content", content = { @Content })
   @PostMapping(value = "{name}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void createPortfolio(@PathVariable String name) {
     persistenceService.newPortfolio(name);
   }
 
+  @Operation(summary = "Return the portfolio by name. If it does not exist yet, return an empty portfolio")
+  @ApiResponse(responseCode = "200", description = "Portfolio with the give name", content = {
+      @Content(mediaType = "application/json", schema = @Schema(implementation = Portfolio.class)) })
   @GetMapping(value = "{name}", produces = MediaType.APPLICATION_JSON_VALUE)
   public Portfolio findPortfolio(@PathVariable String name) {
     return persistenceService.findPortfolio(name);
   }
 
+  @Operation(summary = "Add a stock security to the portfolio")
+  @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
   @PostMapping(value = "{name}/stock/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addStock(@PathVariable String name, @PathVariable String instrumentType, @PathVariable String id,
@@ -50,6 +62,8 @@ public class PortfolioController {
     addInstrument(name, amount, instrument);
   }
 
+  @Operation(summary = "Add an exchange traded fund to the portfolio")
+  @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
   @PostMapping(value = "{name}/etf/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addETF(@PathVariable String name, @PathVariable String instrumentType, @PathVariable String id,
@@ -59,6 +73,8 @@ public class PortfolioController {
     addInstrument(name, amount, instrument);
   }
 
+  @Operation(summary = "Add a bank deposit security to the portfolio")
+  @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
   @PostMapping(value = "{name}/deposit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addDeposit(@PathVariable String name, @PathVariable String instrumentType, @PathVariable String id,
@@ -70,6 +86,8 @@ public class PortfolioController {
     addInstrument(name, amount, instrument);
   }
 
+  @Operation(summary = "Add a government bond to the portfolio")
+  @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
   @PostMapping(value = "{name}/govbond/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addGovernmentBond(@PathVariable String name, @PathVariable String instrumentType, @PathVariable String id,
@@ -81,6 +99,8 @@ public class PortfolioController {
     addInstrument(name, amount, instrument);
   }
 
+  @Operation(summary = "Add a pension fund security to the portfolio")
+  @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
   @PostMapping(value = "{name}/pension/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addPensionFund(@PathVariable String name, @PathVariable String instrumentType, @PathVariable String id,

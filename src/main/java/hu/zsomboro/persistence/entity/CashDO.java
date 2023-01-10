@@ -23,6 +23,10 @@ public class CashDO {
     this.amount = amount;
   }
 
+  public CashDO() {
+    super();
+  }
+
   public long getId() {
     return id;
   }

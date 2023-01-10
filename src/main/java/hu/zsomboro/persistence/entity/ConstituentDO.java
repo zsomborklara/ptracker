@@ -25,6 +25,10 @@ public class ConstituentDO {
     this.number = number;
   }
 
+  public ConstituentDO() {
+    super();
+  }
+
   public long getId() {
     return id;
   }

@@ -12,7 +12,10 @@ public class EquitySecurityDO extends InstrumentDO {
     super(name, identifier, instrumentType);
   }
 
-  @Override
+  public EquitySecurityDO() {
+    super();
+  }
+
   public EquitySecurity toCoreObject() {
     return (EquitySecurity) InstrumentType.valueOf(getInstrumentType()).create(getName(), getIdentifier(), null, 0.0);
   }

@@ -21,6 +21,10 @@ public class FixedIncomeSecurityDO extends InstrumentDO {
     this.interestRate = interestRate;
   }
 
+  public FixedIncomeSecurityDO() {
+    super();
+  }
+
   public double getInterestRate() {
     return interestRate;
   }
@@ -37,7 +41,6 @@ public class FixedIncomeSecurityDO extends InstrumentDO {
     this.maturity = maturity;
   }
 
-  @Override
   public FixedIncomeSecurity toCoreObject() {
     return (FixedIncomeSecurity) InstrumentType.valueOf(getInstrumentType()).create(getName(), getIdentifier(),
         getMaturity(), getInterestRate());

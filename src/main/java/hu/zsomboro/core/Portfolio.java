@@ -55,6 +55,10 @@ public class Portfolio {
     return cash;
   }
 
+  public String getName() {
+    return this.name;
+  }
+
   public boolean hasInstrument(Instrument instrument) {
     return constituents.stream().anyMatch(c -> c.instrument.equals(instrument));
   }
@@ -183,4 +187,5 @@ public class Portfolio {
       return portfolio;
     }
   }
+
 }

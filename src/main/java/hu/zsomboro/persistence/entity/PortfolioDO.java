@@ -35,6 +35,10 @@ public class PortfolioDO {
     this.name = name;
   }
 
+  public PortfolioDO() {
+    super();
+  }
+
   public long getId() {
     return id;
   }

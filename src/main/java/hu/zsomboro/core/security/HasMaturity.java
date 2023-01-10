@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public interface HasMaturity {
 
-  LocalDate getMaturityDate();
+  LocalDate getMaturity();
 
   double getInterestRate();
 

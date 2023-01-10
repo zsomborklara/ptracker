@@ -22,6 +22,10 @@ public abstract class InstrumentDO {
     this.instrumentType = instrumentType;
   }
 
+  public InstrumentDO() {
+    super();
+  }
+
   public String getName() {
     return name;
   }

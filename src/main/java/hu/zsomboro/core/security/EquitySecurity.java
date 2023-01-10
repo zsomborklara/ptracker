@@ -2,7 +2,7 @@ package hu.zsomboro.core.security;
 
 import hu.zsomboro.persistence.entity.EquitySecurityDO;
 
-public final class EquitySecurity extends Instrument {
+public class EquitySecurity extends Instrument {
 
   protected EquitySecurity(String name, String identifier, InstrumentType instrumentType) {
     super(name, identifier, instrumentType);

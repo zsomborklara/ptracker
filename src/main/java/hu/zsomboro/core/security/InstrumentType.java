@@ -22,8 +22,6 @@ public enum InstrumentType {
       Preconditions.checkArgument(interestRate > 0., "Cannot have a negative interest rate");
       return new FixedIncomeSecurity(name, identifier, this, maturity, interestRate);
     }
-    case CASH:
-      return null;
     default:
       throw new IllegalStateException("Unexpected instrument type " + this);
     }

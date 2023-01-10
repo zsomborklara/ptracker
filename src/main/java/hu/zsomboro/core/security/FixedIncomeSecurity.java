@@ -17,7 +17,7 @@ public class FixedIncomeSecurity extends Instrument implements HasMaturity {
   }
 
   @Override
-  public LocalDate getMaturityDate() {
+  public LocalDate getMaturity() {
     return this.maturity;
   }
 

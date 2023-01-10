@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 
@@ -14,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import hu.zsomboro.core.security.EquitySecurity;
 import hu.zsomboro.core.security.FixedIncomeSecurity;
 import hu.zsomboro.core.security.Instrument;
-import hu.zsomboro.persistence.entity.ConstituentDO;
-import hu.zsomboro.persistence.entity.PortfolioDO;
 
 public class TestPortfolio {
 
@@ -90,19 +87,4 @@ public class TestPortfolio {
     assertEquals(5, mutated.getConstituent(newInstrument).getNumber());
   }
 
-  @Test
-  public void testConvertPortfolioToDataObject() {
-    PortfolioDO pdo = initial.toDataObject();
-    for (Portfolio.Constituent constituent : initial.getConstituents()) {
-      boolean found = false;
-      for (ConstituentDO cdo : pdo.getConstituents()) {
-        if (cdo.getInstrument().getIdentifier().equals(constituent.getInstrument().getIdentifier())) {
-          assertEquals(constituent.getNumber(), cdo.getNumber());
-          assertEquals(constituent.getInstrument().getName(), cdo.getInstrument().getName());
-          found = true;
-        }
-      }
-      assertTrue(found);
-    }
-  }
 }

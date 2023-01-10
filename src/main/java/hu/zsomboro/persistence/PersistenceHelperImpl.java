@@ -11,10 +11,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import hu.zsomboro.common.CoreToPersistenceMapper;
 import hu.zsomboro.core.Portfolio;
 import hu.zsomboro.core.security.Instrument;
 import hu.zsomboro.core.security.InstrumentType;
-import hu.zsomboro.persistence.entity.InstrumentDO;
 import hu.zsomboro.persistence.entity.PortfolioDO;
 import hu.zsomboro.persistence.repository.InstrumentDORepository;
 import hu.zsomboro.persistence.repository.PortfolioDORepository;
@@ -26,11 +26,14 @@ public class PersistenceHelperImpl implements PersistenceHelperService {
 
   private final PortfolioDORepository portfolioRepository;
   private final InstrumentDORepository instrumentRepositry;
+  private final CoreToPersistenceMapper mapper;
 
-  public PersistenceHelperImpl(PortfolioDORepository portfolioRepository, InstrumentDORepository instrumentRepositry) {
+  public PersistenceHelperImpl(PortfolioDORepository portfolioRepository, InstrumentDORepository instrumentRepositry,
+      CoreToPersistenceMapper mapper) {
     super();
     this.portfolioRepository = portfolioRepository;
     this.instrumentRepositry = instrumentRepositry;
+    this.mapper = mapper;
   }
 
   @Override
@@ -43,31 +46,31 @@ public class PersistenceHelperImpl implements PersistenceHelperService {
     if (foundPortfolios.isEmpty()) {
       return Portfolio.EMPTY;
     }
-    return foundPortfolios.get(0).toCoreObject();
+    return this.mapper.map(foundPortfolios.get(0), Portfolio.class);
   }
 
   @Override
   @Transactional(value = TxType.REQUIRED)
   public void savePortfolio(Portfolio portfolio) {
-    portfolioRepository.save(portfolio.toDataObject());
+    portfolioRepository.save(mapper.map(portfolio, PortfolioDO.class));
   }
 
   @Override
   @Transactional(value = TxType.REQUIRED)
   public void removePortfolio(Portfolio portfolio) {
-    portfolioRepository.delete(portfolio.toDataObject());
+    portfolioRepository.delete(mapper.map(portfolio, PortfolioDO.class));
   }
 
   @Override
   public Collection<Instrument> getAllStockInstruments() {
     return instrumentRepositry.findByInstrumentType(InstrumentType.STOCK.toString()).stream()
-        .map(InstrumentDO::toCoreObject).collect(Collectors.toList());
+        .map(instrument -> mapper.map(instrument, Instrument.class)).collect(Collectors.toList());
   }
 
   @Override
   public void newPortfolio(String name) {
     Portfolio newPortfolio = new Portfolio.Builder().withName(name).build();
-    portfolioRepository.save(newPortfolio.toDataObject());
+    portfolioRepository.save(mapper.map(newPortfolio, PortfolioDO.class));
   }
 
 }

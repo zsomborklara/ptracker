@@ -9,11 +9,8 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 import hu.zsomboro.core.security.Instrument;
-import hu.zsomboro.persistence.entity.ConstituentDO;
-import hu.zsomboro.persistence.entity.PortfolioDO;
 
 public class Portfolio {
 
@@ -106,14 +103,6 @@ public class Portfolio {
     return constituents;
   }
 
-  public PortfolioDO toDataObject() {
-    Set<ConstituentDO> cdos = Sets.newHashSetWithExpectedSize(this.constituents.size());
-    for (Constituent cd : this.constituents) {
-      cdos.add(cd.toDataObject());
-    }
-    return new PortfolioDO(cdos, cash.toDataObject(), name);
-  }
-
   private FluentIterable<Constituent> filter(Constituent existing) {
     return FluentIterable.from(constituents).filter(Predicates.not(Predicates.equalTo(existing)));
   }
@@ -149,9 +138,6 @@ public class Portfolio {
       return instrument;
     }
 
-    public ConstituentDO toDataObject() {
-      return new ConstituentDO(this.instrument.toDataObject(), this.number);
-    }
   }
 
   public static class Builder {

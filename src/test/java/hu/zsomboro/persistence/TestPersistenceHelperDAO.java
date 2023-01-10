@@ -25,7 +25,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.google.common.collect.Sets;
 
-import hu.zsomboro.core.Cash;
 import hu.zsomboro.core.security.InstrumentType;
 import hu.zsomboro.persistence.entity.CashDO;
 import hu.zsomboro.persistence.entity.ConstituentDO;
@@ -114,7 +113,7 @@ public class TestPersistenceHelperDAO {
   @Test
   public void testGetStockInstruments() {
 
-    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), Cash.ZERO.toDataObject(),
+    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("HUF", 0.d),
         "Dummy");
     entityManager.persist(portfolio);
     final Collection<InstrumentDO> existingStocks = instrumentRepo

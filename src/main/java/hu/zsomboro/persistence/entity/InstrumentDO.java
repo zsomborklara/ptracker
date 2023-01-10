@@ -5,11 +5,9 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
-import hu.zsomboro.core.security.Instrument;
-
 @Inheritance(strategy = InheritanceType.JOINED)
 @Entity
-public abstract class InstrumentDO {
+public class InstrumentDO {
 
   @Id
   private String identifier;
@@ -49,7 +47,5 @@ public abstract class InstrumentDO {
   public void setInstrumentType(String instrumentType) {
     this.instrumentType = instrumentType;
   }
-
-  public abstract Instrument toCoreObject();
 
 }

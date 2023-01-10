@@ -2,8 +2,6 @@ package hu.zsomboro.core.security;
 
 import com.google.common.base.Preconditions;
 
-import hu.zsomboro.persistence.entity.InstrumentDO;
-
 public abstract class Instrument {
 
   private final String name;
@@ -53,5 +51,4 @@ public abstract class Instrument {
     return identifier.hashCode();
   }
 
-  public abstract InstrumentDO toDataObject();
 }

@@ -5,9 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import hu.zsomboro.core.Cash;
-import hu.zsomboro.core.Portfolio;
-
 @Entity
 public class CashDO {
 
@@ -51,7 +48,4 @@ public class CashDO {
     this.amount = amount;
   }
 
-  public void addCoreObject(Portfolio.Builder builder) {
-    builder.add(new Cash(amount, currency));
-  }
 }

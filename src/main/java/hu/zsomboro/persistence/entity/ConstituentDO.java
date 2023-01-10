@@ -8,8 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import hu.zsomboro.core.Portfolio;
-
 @Entity
 public class ConstituentDO {
 
@@ -53,7 +51,4 @@ public class ConstituentDO {
     this.number = number;
   }
 
-  public void addCoreObject(Portfolio.Builder builder) {
-    builder.add(instrument.toCoreObject(), number);
-  }
 }

@@ -14,8 +14,6 @@ import javax.persistence.OneToOne;
 
 import com.google.common.collect.Sets;
 
-import hu.zsomboro.core.Portfolio;
-
 @Entity
 public class PortfolioDO {
 
@@ -71,13 +69,4 @@ public class PortfolioDO {
     this.name = name;
   }
 
-  public Portfolio toCoreObject() {
-    Portfolio.Builder builder = new Portfolio.Builder();
-    for (ConstituentDO cdo : constituents) {
-      cdo.addCoreObject(builder);
-    }
-    builder.withName(name);
-    cash.addCoreObject(builder);
-    return builder.build();
-  }
 }

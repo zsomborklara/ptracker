@@ -2,8 +2,6 @@ package hu.zsomboro.core.security;
 
 import java.time.LocalDate;
 
-import hu.zsomboro.persistence.entity.FixedIncomeSecurityDO;
-
 public class FixedIncomeSecurity extends Instrument implements HasMaturity {
 
   private final LocalDate maturity;
@@ -24,11 +22,6 @@ public class FixedIncomeSecurity extends Instrument implements HasMaturity {
   @Override
   public double getInterestRate() {
     return this.interestRate;
-  }
-
-  @Override
-  public FixedIncomeSecurityDO toDataObject() {
-    return new FixedIncomeSecurityDO(getName(), getIdentifier(), getIdentifier(), maturity, interestRate);
   }
 
   public static FixedIncomeSecurity newDeposit(String name, String identifier, LocalDate maturity,

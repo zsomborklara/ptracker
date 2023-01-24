@@ -106,7 +106,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<testFramework>JUNIT5</testFramework>
-					<packageWithBaseClasses>hu.zsommboro.ptracker.integration.contract</packageWithBaseClasses>
+					<packageWithBaseClasses>hu.zsomboro.ptracker.integration.contract</packageWithBaseClasses>
 					<testMode>EXPLICIT</testMode>
 					<nameSuffixForTests>IT</nameSuffixForTests>
 				</configuration>

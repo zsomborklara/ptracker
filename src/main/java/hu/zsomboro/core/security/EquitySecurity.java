@@ -1,6 +1,6 @@
 package hu.zsomboro.core.security;
 
-public class EquitySecurity extends Instrument {
+public class EquitySecurity extends Instrument implements HasPrice {
 
   protected EquitySecurity(String name, String identifier, InstrumentType instrumentType) {
     super(name, identifier, instrumentType);

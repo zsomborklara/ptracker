@@ -4,12 +4,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import hu.zsomboro.core.security.Instrument;
 import hu.zsomboro.core.security.InstrumentType;
@@ -50,13 +49,13 @@ public class PortfolioServiceImpl implements PortfolioService {
   }
 
   @Override
-  @Transactional(value = TxType.REQUIRED)
+  @Transactional(propagation = Propagation.REQUIRED)
   public void savePortfolio(Portfolio portfolio) {
     portfolioRepository.save(mapper.map(portfolio, PortfolioDO.class));
   }
 
   @Override
-  @Transactional(value = TxType.REQUIRED)
+  @Transactional(propagation = Propagation.REQUIRED)
   public void removePortfolio(Portfolio portfolio) {
     portfolioRepository.delete(mapper.map(portfolio, PortfolioDO.class));
   }

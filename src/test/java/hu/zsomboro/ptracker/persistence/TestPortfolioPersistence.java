@@ -35,7 +35,7 @@ import hu.zsomboro.ptracker.persistence.entity.PortfolioDO;
 
 @DataJpaTest
 @ContextConfiguration
-public class TestPersistenceHelperDAO {
+public class TestPortfolioPersistence {
 
   @Autowired
   private TestEntityManager entityManager;
@@ -55,7 +55,7 @@ public class TestPersistenceHelperDAO {
 
     PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("USD", 100.d),
         "Dummy");
-    entityManager.persistAndFlush(portfolio);
+    portfolioRepo.save(portfolio);
     PortfolioDO newPortfolio = portfolioRepo.findById(portfolio.getId());
     assertNotNull(newPortfolio);
     assertEquals(portfolio.getId(), newPortfolio.getId());
@@ -88,7 +88,7 @@ public class TestPersistenceHelperDAO {
 
     PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("USD", 100.d),
         "Dummy");
-    entityManager.persistAndFlush(portfolio);
+    portfolioRepo.save(portfolio);
     List<PortfolioDO> newPortfolio = portfolioRepo.findByName(portfolio.getName());
     assertThat(newPortfolio, hasSize(1));
     assertThat(newPortfolio.get(0).getName(), equalTo("Dummy"));
@@ -113,7 +113,7 @@ public class TestPersistenceHelperDAO {
 
     PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("HUF", 0.d),
         "Dummy");
-    entityManager.persist(portfolio);
+    portfolioRepo.save(portfolio);
     final Collection<InstrumentDO> existingStocks = instrumentRepo
         .findByInstrumentType(InstrumentType.STOCK.toString());
     assertEquals(1, existingStocks.size());

@@ -20,11 +20,13 @@ import hu.zsomboro.core.security.FixedIncomeSecurity;
 import hu.zsomboro.ptracker.core.Cash;
 import hu.zsomboro.ptracker.core.Portfolio;
 import hu.zsomboro.ptracker.core.Portfolio.Constituent;
+import hu.zsomboro.ptracker.core.Price;
 import hu.zsomboro.ptracker.persistence.entity.CashDO;
 import hu.zsomboro.ptracker.persistence.entity.ConstituentDO;
 import hu.zsomboro.ptracker.persistence.entity.EquitySecurityDO;
 import hu.zsomboro.ptracker.persistence.entity.FixedIncomeSecurityDO;
 import hu.zsomboro.ptracker.persistence.entity.PortfolioDO;
+import hu.zsomboro.ptracker.persistence.entity.PriceDO;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
@@ -32,6 +34,29 @@ public class TestCoreToPersistenceMapper {
 
   @Autowired
   private CoreToPersistenceMapper mapper;
+
+  @Test
+  public void whenPriceMatch_thenConvertsToDTO() {
+
+    Price price = new Price(123.4d, "HUF");
+    PriceDO priceDTO = this.mapper.map(price, PriceDO.class);
+
+    assertEquals(price.value(), priceDTO.getPrice());
+    assertEquals(price.priceCurrency(), priceDTO.getCurrency());
+  }
+
+  @Test
+  public void whenPriceDOMatch_thenConvertsToCore() {
+
+    PriceDO priceDTO = new PriceDO();
+    priceDTO.setCurrency("USD");
+    priceDTO.setIdentifier("dummy");
+    priceDTO.setAsOfDate(LocalDate.now());
+    Price price = this.mapper.map(priceDTO, Price.class);
+
+    assertEquals(price.value(), priceDTO.getPrice());
+    assertEquals(price.priceCurrency(), priceDTO.getCurrency());
+  }
 
   @Test
   public void whenInstrumentMatch_thenConvertsToDTO() {

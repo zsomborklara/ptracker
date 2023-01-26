@@ -11,18 +11,38 @@ import hu.zsomboro.core.security.InstrumentType;
 import hu.zsomboro.ptracker.core.Cash;
 import hu.zsomboro.ptracker.core.Portfolio;
 import hu.zsomboro.ptracker.core.Portfolio.Builder;
+import hu.zsomboro.ptracker.core.Price;
 import hu.zsomboro.ptracker.persistence.entity.CashDO;
 import hu.zsomboro.ptracker.persistence.entity.ConstituentDO;
 import hu.zsomboro.ptracker.persistence.entity.EquitySecurityDO;
 import hu.zsomboro.ptracker.persistence.entity.FixedIncomeSecurityDO;
 import hu.zsomboro.ptracker.persistence.entity.InstrumentDO;
 import hu.zsomboro.ptracker.persistence.entity.PortfolioDO;
+import hu.zsomboro.ptracker.persistence.entity.PriceDO;
 
 @Component
 public class CoreToPersistenceMapper extends ModelMapper {
 
   public CoreToPersistenceMapper() {
     super();
+
+    Converter<Price, PriceDO> priceToDoConverter = mappingContext -> {
+      Price price = mappingContext.getSource();
+      PriceDO priceDO = new PriceDO();
+      priceDO.setCurrency(price.priceCurrency());
+      priceDO.setPrice(price.value());
+      return priceDO;
+    };
+
+    this.createTypeMap(Price.class, PriceDO.class).setConverter(priceToDoConverter);
+
+    Converter<PriceDO, Price> priceDoToCoreConverter = mappingContext -> {
+      PriceDO priceDO = mappingContext.getSource();
+      return new Price(priceDO.getPrice(), priceDO.getCurrency());
+    };
+
+    this.createTypeMap(PriceDO.class, Price.class).setConverter(priceDoToCoreConverter);
+
     Converter<Cash, CashDO> cashToDoConverter = mappingContext -> {
       Cash cash = mappingContext.getSource();
       return new CashDO(cash.currency(), cash.amount());

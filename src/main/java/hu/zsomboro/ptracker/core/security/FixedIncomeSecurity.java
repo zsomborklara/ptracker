@@ -1,4 +1,4 @@
-package hu.zsomboro.core.security;
+package hu.zsomboro.ptracker.core.security;
 
 import java.time.LocalDate;
 

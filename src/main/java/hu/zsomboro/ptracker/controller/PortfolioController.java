@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import hu.zsomboro.core.security.EquitySecurity;
-import hu.zsomboro.core.security.FixedIncomeSecurity;
-import hu.zsomboro.core.security.Instrument;
 import hu.zsomboro.ptracker.core.Portfolio;
+import hu.zsomboro.ptracker.core.security.EquitySecurity;
+import hu.zsomboro.ptracker.core.security.FixedIncomeSecurity;
+import hu.zsomboro.ptracker.core.security.Instrument;
 import hu.zsomboro.ptracker.service.PortfolioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

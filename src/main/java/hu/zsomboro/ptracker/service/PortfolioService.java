@@ -2,8 +2,8 @@ package hu.zsomboro.ptracker.service;
 
 import java.util.Collection;
 
-import hu.zsomboro.core.security.Instrument;
 import hu.zsomboro.ptracker.core.Portfolio;
+import hu.zsomboro.ptracker.core.security.Instrument;
 
 public interface PortfolioService {
 

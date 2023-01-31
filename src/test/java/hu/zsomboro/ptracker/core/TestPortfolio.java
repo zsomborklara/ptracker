@@ -10,11 +10,11 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import hu.zsomboro.core.security.EquitySecurity;
-import hu.zsomboro.core.security.FixedIncomeSecurity;
-import hu.zsomboro.core.security.Instrument;
 import hu.zsomboro.ptracker.core.Cash;
 import hu.zsomboro.ptracker.core.Portfolio;
+import hu.zsomboro.ptracker.core.security.EquitySecurity;
+import hu.zsomboro.ptracker.core.security.FixedIncomeSecurity;
+import hu.zsomboro.ptracker.core.security.Instrument;
 
 public class TestPortfolio {
 

@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
-import hu.zsomboro.core.security.Instrument;
+import hu.zsomboro.ptracker.core.security.Instrument;
 
 public class Portfolio {
 

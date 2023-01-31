@@ -10,17 +10,19 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import hu.zsomboro.core.security.EquitySecurity;
-import hu.zsomboro.core.security.FixedIncomeSecurity;
 import hu.zsomboro.ptracker.core.Cash;
 import hu.zsomboro.ptracker.core.Portfolio;
 import hu.zsomboro.ptracker.core.Portfolio.Constituent;
 import hu.zsomboro.ptracker.core.Price;
+import hu.zsomboro.ptracker.core.security.EquitySecurity;
+import hu.zsomboro.ptracker.core.security.FixedIncomeSecurity;
 import hu.zsomboro.ptracker.persistence.entity.CashDO;
 import hu.zsomboro.ptracker.persistence.entity.ConstituentDO;
 import hu.zsomboro.ptracker.persistence.entity.EquitySecurityDO;
@@ -214,6 +216,7 @@ public class TestCoreToPersistenceMapper {
   }
 
   @Configuration
+  @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
   @ComponentScan(basePackages = { "hu.zsomboro.ptracker.common" })
   public static class SpringTestConfig {
 

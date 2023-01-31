@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 import javax.persistence.Entity;
 
-import hu.zsomboro.core.security.FixedIncomeSecurity;
-import hu.zsomboro.core.security.InstrumentType;
+import hu.zsomboro.ptracker.core.security.FixedIncomeSecurity;
+import hu.zsomboro.ptracker.core.security.InstrumentType;
 
 @Entity
 public class FixedIncomeSecurityDO extends InstrumentDO {

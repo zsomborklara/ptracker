@@ -19,13 +19,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.google.common.collect.Sets;
 
-import hu.zsomboro.core.security.InstrumentType;
+import hu.zsomboro.ptracker.core.security.InstrumentType;
 import hu.zsomboro.ptracker.persistence.entity.CashDO;
 import hu.zsomboro.ptracker.persistence.entity.ConstituentDO;
 import hu.zsomboro.ptracker.persistence.entity.EquitySecurityDO;
@@ -121,12 +119,6 @@ public class TestPortfolioPersistence {
     assertEquals("STOCK", stockInstrument.getInstrumentType());
     assertEquals("INST2", stockInstrument.getIdentifier());
     assertEquals("inst2", stockInstrument.getName());
-
-  }
-
-  @Configuration
-  @ComponentScan(basePackages = { "hu.zsomboro.ptracker" })
-  public static class SpringTestConfig {
 
   }
 }

@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import hu.zsomboro.core.security.Instrument;
-import hu.zsomboro.core.security.InstrumentType;
 import hu.zsomboro.ptracker.common.CoreToPersistenceMapper;
 import hu.zsomboro.ptracker.core.Portfolio;
+import hu.zsomboro.ptracker.core.security.Instrument;
+import hu.zsomboro.ptracker.core.security.InstrumentType;
 import hu.zsomboro.ptracker.persistence.InstrumentDORepository;
 import hu.zsomboro.ptracker.persistence.PortfolioDORepository;
 import hu.zsomboro.ptracker.persistence.entity.PortfolioDO;

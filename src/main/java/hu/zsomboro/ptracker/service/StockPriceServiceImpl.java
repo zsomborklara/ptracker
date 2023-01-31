@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import hu.zsomboro.core.security.HasPrice;
 import hu.zsomboro.ptracker.common.CoreToPersistenceMapper;
 import hu.zsomboro.ptracker.core.Price;
+import hu.zsomboro.ptracker.core.security.HasPrice;
 import hu.zsomboro.ptracker.persistence.PriceDORepository;
 import hu.zsomboro.ptracker.persistence.entity.PriceDO;
 import hu.zsomboro.ptracker.persistence.entity.PriceId;

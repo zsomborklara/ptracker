@@ -3,8 +3,8 @@ package hu.zsomboro.ptracker.service;
 import java.time.LocalDate;
 import java.util.Map;
 
-import hu.zsomboro.core.security.HasPrice;
 import hu.zsomboro.ptracker.core.Price;
+import hu.zsomboro.ptracker.core.security.HasPrice;
 
 public interface PriceService {
 

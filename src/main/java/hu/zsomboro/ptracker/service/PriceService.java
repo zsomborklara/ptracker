@@ -10,7 +10,7 @@ public interface PriceService {
 
   public Price getPrice(LocalDate asOfDate, HasPrice pricedInstrument);
 
-  public void savePirce(LocalDate asOfDate, HasPrice pricedInstrument, Price price);
+  public void savePrice(LocalDate asOfDate, HasPrice pricedInstrument, Price price);
 
   public Map<LocalDate, Price> getPriceHistory(HasPrice pricedInstrument);
 

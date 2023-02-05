@@ -11,7 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.google.common.base.Strings;
 
 @Component
-public class YahooPriceClient implements PriceClient {
+public class YahooPriceClient implements PriceClient, FxRateClient {
 
   private static final String YAHOO_QUOTE_URL = "https://query2.finance.yahoo.com/v7/finance/quote";
   private static final String SYMBOL = "symbols";
@@ -28,12 +28,21 @@ public class YahooPriceClient implements PriceClient {
   @Override
   public double getTodayPrice(String identifier) {
 
+    return callAPIWithIdentifierInternal(identifier);
+  }
+
+  @Override
+  public double getTodayFxRateToHUF(String fromCurrency) {
+    return callAPIWithIdentifierInternal(fromCurrency + "HUF=X");
+  }
+
+  private double callAPIWithIdentifierInternal(String identifier) {
     String urlTemplate = UriComponentsBuilder.fromHttpUrl(YAHOO_QUOTE_URL).queryParam(SYMBOL, "{" + SYMBOL + "}")
         .queryParam(FIELDS, "{" + FIELDS + "}").encode().toUriString();
 
-    ResponseEntity<YahooResponse> response = this.restTemplate.exchange(urlTemplate, HttpMethod.GET, null,
-        YahooResponse.class, Map.of(SYMBOL, identifier, FIELDS, MARKET_PRICE_FIELD));
-    YahooResponse body = response.getBody();
+    ResponseEntity<YahooPriceResponse> response = this.restTemplate.exchange(urlTemplate, HttpMethod.GET, null,
+        YahooPriceResponse.class, Map.of(SYMBOL, identifier, FIELDS, MARKET_PRICE_FIELD));
+    YahooPriceResponse body = response.getBody();
 
     String error = body.getQuoteResponse().getError();
     if (!Strings.isNullOrEmpty(error)) {
@@ -41,5 +50,4 @@ public class YahooPriceClient implements PriceClient {
     }
     return body.getMarketPrice();
   }
-
 }

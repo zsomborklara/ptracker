@@ -1,6 +1,6 @@
 package hu.zsomboro.ptracker.client;
 
-public class YahooResponse {
+public class YahooPriceResponse {
 
   private QuoteResponse quoteResponse;
 

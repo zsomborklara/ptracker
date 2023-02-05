@@ -49,7 +49,7 @@ public class StockPriceServiceImpl implements PriceService {
 
   @Override
   @Transactional(propagation = Propagation.REQUIRED)
-  public void savePirce(LocalDate asOfDate, HasPrice pricedInstrument, Price price) {
+  public void savePrice(LocalDate asOfDate, HasPrice pricedInstrument, Price price) {
     PriceDO priceDO = mapper.map(price, PriceDO.class);
     priceDO.setAsOfDate(asOfDate);
     priceDO.setIdentifier(pricedInstrument.getIdentifier());

@@ -30,6 +30,9 @@ public class TestYahooPriceClient {
   private PriceClient priceClient;
 
   @Autowired
+  private FxRateClient fxRateClient;
+
+  @Autowired
   private RestTemplate restTemplate;
 
   private MockRestServiceServer server;
@@ -37,16 +40,29 @@ public class TestYahooPriceClient {
   @BeforeEach
   public void init() throws JsonMappingException, JsonProcessingException {
     server = MockRestServiceServer.bindTo(restTemplate).build();
-    String response = "{\"quoteResponse\":{\"result\":[{\"language\":\"en-US\",\"region\":\"US\",\"quoteType\":\"EQUITY\",\"typeDisp\":\"Equity\",\"quoteSourceName\":\"Delayed Quote\",\"triggerable\":true,\"customPriceAlertConfidence\":\"HIGH\",\"regularMarketPrice\":506.11,\"gmtOffSetMilliseconds\":-18000000,\"market\":\"us_market\",\"esgPopulated\":false,\"exchange\":\"NYQ\",\"exchangeTimezoneName\":\"America/New_York\",\"exchangeTimezoneShortName\":\"EST\",\"marketState\":\"POST\",\"firstTradeDateMilliseconds\":1195137000000,\"priceHint\":2,\"regularMarketTime\":1675112395,\"fullExchangeName\":\"NYSE\",\"sourceInterval\":15,\"exchangeDataDelayedBy\":0,\"tradeable\":false,\"cryptoTradeable\":false,\"symbol\":\"IBM\"}],\"error\":null}}";
-    this.server
-        .expect(requestTo("https://query2.finance.yahoo.com/v7/finance/quote?symbols=IBM&fields=regularMarketPrice"))
-        .andRespond(withSuccess(response, MediaType.APPLICATION_JSON));
   }
 
   @Test
-  public void testCallYahooService() {
+  public void testCallYahooServiceForPrice() {
+    String priceResponse = "{\"quoteResponse\":{\"result\":[{\"language\":\"en-US\",\"region\":\"US\",\"quoteType\":\"EQUITY\",\"typeDisp\":\"Equity\",\"quoteSourceName\":\"Delayed Quote\",\"triggerable\":true,\"customPriceAlertConfidence\":\"HIGH\",\"regularMarketPrice\":506.11,\"gmtOffSetMilliseconds\":-18000000,\"market\":\"us_market\",\"esgPopulated\":false,\"exchange\":\"NYQ\",\"exchangeTimezoneName\":\"America/New_York\",\"exchangeTimezoneShortName\":\"EST\",\"marketState\":\"POST\",\"firstTradeDateMilliseconds\":1195137000000,\"priceHint\":2,\"regularMarketTime\":1675112395,\"fullExchangeName\":\"NYSE\",\"sourceInterval\":15,\"exchangeDataDelayedBy\":0,\"tradeable\":false,\"cryptoTradeable\":false,\"symbol\":\"IBM\"}],\"error\":null}}";
+    this.server
+        .expect(requestTo("https://query2.finance.yahoo.com/v7/finance/quote?symbols=IBM&fields=regularMarketPrice"))
+        .andRespond(withSuccess(priceResponse, MediaType.APPLICATION_JSON));
     double todayPrice = priceClient.getTodayPrice("IBM");
     assertThat(todayPrice, closeTo(506.11d, 1e-14));
+  }
+
+  @Test
+  public void testCallYahooServiceForFxRate() {
+
+    String fxRateResponse = "{\"quoteResponse\":{\"result\":[{\"language\":\"en-US\",\"region\":\"US\",\"quoteType\":\"CURRENCY\",\"typeDisp\":\"Currency\",\"quoteSourceName\":\"Delayed Quote\",\"triggerable\":true,\"customPriceAlertConfidence\":\"HIGH\",\"regularMarketPrice\":387.86,\"marketState\":\"CLOSED\",\"exchangeTimezoneShortName\":\"GMT\",\"gmtOffSetMilliseconds\":0,\"market\":\"ccy_market\",\"esgPopulated\":false,\"exchangeTimezoneName\":\"Europe/London\",\"exchange\":\"CCY\",\"firstTradeDateMilliseconds\":1070236800000,\"priceHint\":4,\"sourceInterval\":15,\"exchangeDataDelayedBy\":0,\"tradeable\":false,\"cryptoTradeable\":false,\"regularMarketTime\":1675463272,\"fullExchangeName\":\"CCY\",\"symbol\":\"EURHUF=X\"}],\"error\":null}}";
+
+    this.server
+        .expect(
+            requestTo("https://query2.finance.yahoo.com/v7/finance/quote?symbols=EURHUF%3DX&fields=regularMarketPrice"))
+        .andRespond(withSuccess(fxRateResponse, MediaType.APPLICATION_JSON));
+    double todayRate = fxRateClient.getTodayFxRateToHUF("EUR");
+    assertThat(todayRate, closeTo(387.86d, 1e-14));
   }
 
   @Configuration

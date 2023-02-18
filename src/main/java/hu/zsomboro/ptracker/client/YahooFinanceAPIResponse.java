@@ -1,6 +1,6 @@
 package hu.zsomboro.ptracker.client;
 
-public class YahooPriceResponse {
+public class YahooFinanceAPIResponse {
 
   private QuoteResponse quoteResponse;
 
@@ -10,10 +10,6 @@ public class YahooPriceResponse {
 
   public void setQuoteResponse(QuoteResponse quoteResponse) {
     this.quoteResponse = quoteResponse;
-  }
-
-  public Double getMarketPrice() {
-    return quoteResponse.result[0].regularMarketPrice;
   }
 
   public static class QuoteResponse {
@@ -43,6 +39,7 @@ public class YahooPriceResponse {
     private String symbol;
     private String quoteType;
     private Double regularMarketPrice;
+    private String currency;
 
     public String getFullExchangeName() {
       return fullExchangeName;
@@ -82,6 +79,14 @@ public class YahooPriceResponse {
 
     public void setRegularMarketPrice(Double regularMarketPrice) {
       this.regularMarketPrice = regularMarketPrice;
+    }
+
+    public String getCurrency() {
+      return currency;
+    }
+
+    public void setCurrency(String currency) {
+      this.currency = currency;
     }
 
   }

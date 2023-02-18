@@ -3,7 +3,7 @@ package hu.zsomboro.ptracker.service;
 import java.util.Collection;
 
 import hu.zsomboro.ptracker.core.Portfolio;
-import hu.zsomboro.ptracker.core.security.Instrument;
+import hu.zsomboro.ptracker.core.security.HasPrice;
 
 public interface PortfolioService {
 
@@ -15,6 +15,6 @@ public interface PortfolioService {
 
   public void removePortfolio(Portfolio portfolio);
 
-  public Collection<Instrument> getAllStockInstruments();
+  public Collection<HasPrice> getAllPriceableInstruments();
 
 }

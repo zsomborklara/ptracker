@@ -10,12 +10,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Streams;
+
 import hu.zsomboro.ptracker.common.CoreToPersistenceMapper;
 import hu.zsomboro.ptracker.core.Portfolio;
+import hu.zsomboro.ptracker.core.security.HasPrice;
 import hu.zsomboro.ptracker.core.security.Instrument;
 import hu.zsomboro.ptracker.core.security.InstrumentType;
 import hu.zsomboro.ptracker.persistence.InstrumentDORepository;
 import hu.zsomboro.ptracker.persistence.PortfolioDORepository;
+import hu.zsomboro.ptracker.persistence.entity.InstrumentDO;
 import hu.zsomboro.ptracker.persistence.entity.PortfolioDO;
 
 @Service
@@ -61,9 +65,11 @@ public class PortfolioServiceImpl implements PortfolioService {
   }
 
   @Override
-  public Collection<Instrument> getAllStockInstruments() {
-    return instrumentRepositry.findByInstrumentType(InstrumentType.STOCK.toString()).stream()
-        .map(instrument -> mapper.map(instrument, Instrument.class)).collect(Collectors.toList());
+  public Collection<HasPrice> getAllPriceableInstruments() {
+    List<InstrumentDO> stocks = instrumentRepositry.findByInstrumentType(InstrumentType.STOCK.toString());
+    List<InstrumentDO> etfs = instrumentRepositry.findByInstrumentType(InstrumentType.EXCHANGE_TRADED_FUND.toString());
+    return Streams.concat(stocks.stream(), etfs.stream()).map(instrument -> mapper.map(instrument, Instrument.class))
+        .map(HasPrice.class::cast).collect(Collectors.toList());
   }
 
   @Override

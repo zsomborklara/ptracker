@@ -7,8 +7,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import hu.zsomboro.ptracker.common.CoreToPersistenceMapper;
 import hu.zsomboro.ptracker.core.Price;
@@ -18,12 +16,12 @@ import hu.zsomboro.ptracker.persistence.entity.PriceDO;
 import hu.zsomboro.ptracker.persistence.entity.PriceId;
 
 @Service
-public class StockPriceServiceImpl implements PriceService {
+public class LoadedPriceServiceImpl implements LoadedPriceService {
 
   private final PriceDORepository repository;
   private final CoreToPersistenceMapper mapper;
 
-  public StockPriceServiceImpl(PriceDORepository repository, CoreToPersistenceMapper mapper) {
+  public LoadedPriceServiceImpl(PriceDORepository repository, CoreToPersistenceMapper mapper) {
     super();
     this.repository = repository;
     this.mapper = mapper;
@@ -45,15 +43,6 @@ public class StockPriceServiceImpl implements PriceService {
   public Map<String, Price> getAllPricesForDay(LocalDate asOfDate) {
     List<PriceDO> allPricesForDate = repository.findByAsOfDate(asOfDate);
     return allPricesForDate.stream().collect(Collectors.toMap(PriceDO::getIdentifier, p -> mapper.map(p, Price.class)));
-  }
-
-  @Override
-  @Transactional(propagation = Propagation.REQUIRED)
-  public void savePrice(LocalDate asOfDate, HasPrice pricedInstrument, Price price) {
-    PriceDO priceDO = mapper.map(price, PriceDO.class);
-    priceDO.setAsOfDate(asOfDate);
-    priceDO.setIdentifier(pricedInstrument.getIdentifier());
-    repository.save(priceDO);
   }
 
 }

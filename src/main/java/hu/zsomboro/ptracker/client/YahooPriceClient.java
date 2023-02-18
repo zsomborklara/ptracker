@@ -10,13 +10,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.common.base.Strings;
 
+import hu.zsomboro.ptracker.client.YahooFinanceAPIResponse.Result;
+import hu.zsomboro.ptracker.core.Price;
+
 @Component
 public class YahooPriceClient implements PriceClient, FxRateClient {
 
   private static final String YAHOO_QUOTE_URL = "https://query2.finance.yahoo.com/v7/finance/quote";
   private static final String SYMBOL = "symbols";
   private static final String FIELDS = "fields";
-  private static final String MARKET_PRICE_FIELD = "regularMarketPrice";
+  private static final String REQUESTED_FIELDS = "regularMarketPrice,currency";
 
   private final RestTemplate restTemplate;
 
@@ -26,28 +29,29 @@ public class YahooPriceClient implements PriceClient, FxRateClient {
   }
 
   @Override
-  public double getTodayPrice(String identifier) {
-
-    return callAPIWithIdentifierInternal(identifier);
+  public Price getTodayPrice(String identifier) {
+    Result result = callAPIWithIdentifierInternal(identifier);
+    return new Price(result.getRegularMarketPrice(), result.getCurrency());
   }
 
   @Override
   public double getTodayFxRateToHUF(String fromCurrency) {
-    return callAPIWithIdentifierInternal(fromCurrency + "HUF=X");
+    Result result = callAPIWithIdentifierInternal(fromCurrency + "HUF=X");
+    return result.getRegularMarketPrice();
   }
 
-  private double callAPIWithIdentifierInternal(String identifier) {
+  private Result callAPIWithIdentifierInternal(String identifier) {
     String urlTemplate = UriComponentsBuilder.fromHttpUrl(YAHOO_QUOTE_URL).queryParam(SYMBOL, "{" + SYMBOL + "}")
         .queryParam(FIELDS, "{" + FIELDS + "}").encode().toUriString();
 
-    ResponseEntity<YahooPriceResponse> response = this.restTemplate.exchange(urlTemplate, HttpMethod.GET, null,
-        YahooPriceResponse.class, Map.of(SYMBOL, identifier, FIELDS, MARKET_PRICE_FIELD));
-    YahooPriceResponse body = response.getBody();
+    ResponseEntity<YahooFinanceAPIResponse> response = this.restTemplate.exchange(urlTemplate, HttpMethod.GET, null,
+        YahooFinanceAPIResponse.class, Map.of(SYMBOL, identifier, FIELDS, REQUESTED_FIELDS));
+    YahooFinanceAPIResponse body = response.getBody();
 
     String error = body.getQuoteResponse().getError();
     if (!Strings.isNullOrEmpty(error)) {
       throw new IllegalStateException("Cannot get prices from yahoo finance: " + error);
     }
-    return body.getMarketPrice();
+    return body.getQuoteResponse().getResult()[0];
   }
 }

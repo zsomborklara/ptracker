@@ -10,8 +10,6 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import hu.zsomboro.ptracker.core.Cash;
-import hu.zsomboro.ptracker.core.Portfolio;
 import hu.zsomboro.ptracker.core.security.EquitySecurity;
 import hu.zsomboro.ptracker.core.security.FixedIncomeSecurity;
 import hu.zsomboro.ptracker.core.security.Instrument;
@@ -60,7 +58,7 @@ public class TestPortfolio {
   public void testAddNewConstituentWithWrongNumber() {
     assertThrows(IllegalArgumentException.class, () -> {
       Instrument newInstrument = EquitySecurity.newETF("inst3", "INST3");
-      Portfolio mutated = initial.add(newInstrument, -10);
+      initial.add(newInstrument, -10);
     });
   }
 

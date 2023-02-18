@@ -6,11 +6,9 @@ import java.util.Map;
 import hu.zsomboro.ptracker.core.Price;
 import hu.zsomboro.ptracker.core.security.HasPrice;
 
-public interface PriceService {
+public interface LoadedPriceService {
 
   public Price getPrice(LocalDate asOfDate, HasPrice pricedInstrument);
-
-  public void savePrice(LocalDate asOfDate, HasPrice pricedInstrument, Price price);
 
   public Map<LocalDate, Price> getPriceHistory(HasPrice pricedInstrument);
 

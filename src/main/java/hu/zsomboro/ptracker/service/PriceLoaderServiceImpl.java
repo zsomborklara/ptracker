@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,8 @@ import hu.zsomboro.ptracker.persistence.entity.PriceDO;
 
 @Service
 public class PriceLoaderServiceImpl implements PriceLoaderService {
+
+  private static final Logger LOG = LoggerFactory.getLogger(PriceLoaderServiceImpl.class);
 
   private final PriceDORepository priceRepository;
   private final HufFxRateDORepository fxRateRepository;
@@ -54,7 +58,13 @@ public class PriceLoaderServiceImpl implements PriceLoaderService {
     Map<String, HufFxRateDO> fetchedFxRates = Maps.newHashMap();
 
     for (HasPrice priceableInstrument : priceableInstruments) {
+
+      LOG.info("Found pricable instrument {} will try to fetch a price for it", priceableInstrument);
+
       Price todayPrice = priceClient.getTodayPrice(priceableInstrument.getIdentifier());
+
+      LOG.info("Found price {} for {}", todayPrice, priceableInstrument);
+
       PriceDO priceDO = mapper.map(todayPrice, PriceDO.class);
       priceDO.setAsOfDate(LocalDate.now());
       priceDO.setIdentifier(priceableInstrument.getIdentifier());
@@ -62,7 +72,13 @@ public class PriceLoaderServiceImpl implements PriceLoaderService {
 
       if (!"HUF".equalsIgnoreCase(todayPrice.priceCurrency())
           && !fetchedFxRates.containsKey(todayPrice.priceCurrency())) {
+
+        LOG.info("Price is in {} will try to fetch fx rate", todayPrice.priceCurrency());
+
         double rate = fxRateClient.getTodayFxRateToHUF(todayPrice.priceCurrency());
+
+        LOG.info("Found fx rate {} for price {}", rate, todayPrice);
+
         HufFxRateDO fxRateDO = new HufFxRateDO();
         fxRateDO.setAsOfDate(LocalDate.now());
         fxRateDO.setIsoCurrency(todayPrice.priceCurrency());

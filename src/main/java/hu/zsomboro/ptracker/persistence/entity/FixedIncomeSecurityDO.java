@@ -2,10 +2,9 @@ package hu.zsomboro.ptracker.persistence.entity;
 
 import java.time.LocalDate;
 
-import javax.persistence.Entity;
-
 import hu.zsomboro.ptracker.core.security.FixedIncomeSecurity;
 import hu.zsomboro.ptracker.core.security.InstrumentType;
+import jakarta.persistence.Entity;
 
 @Entity
 public class FixedIncomeSecurityDO extends InstrumentDO {

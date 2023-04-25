@@ -1,6 +1,6 @@
 package hu.zsomboro.ptracker.persistence.entity;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 @Entity
 public class EquitySecurityDO extends InstrumentDO {

@@ -3,9 +3,9 @@ package hu.zsomboro.ptracker.persistence.entity;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 
 @Entity
 @IdClass(FxRateId.class)

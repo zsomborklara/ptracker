@@ -3,6 +3,8 @@ package hu.zsomboro.ptracker.controller;
 import java.time.LocalDate;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +32,8 @@ public class PortfolioController {
   // swagger UI available on: http://localhost:8080/tracker/swagger-ui/index.html
   private PortfolioService persistenceService;
 
+  private static final Logger LOG = LoggerFactory.getLogger(PortfolioController.class);
+
   public PortfolioController(PortfolioService persistenceService) {
     super();
     this.persistenceService = persistenceService;
@@ -40,6 +44,7 @@ public class PortfolioController {
   @PostMapping(value = "{name}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void createPortfolio(@PathVariable String name) {
+    LOG.info("Creating new portfolio with name {}", name);
     persistenceService.newPortfolio(name);
   }
 
@@ -53,63 +58,72 @@ public class PortfolioController {
 
   @Operation(summary = "Add a stock security to the portfolio")
   @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
-  @PostMapping(value = "{name}/stock/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "{portfolioName}/stock/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addStock(@PathVariable String name, @PathVariable String instrumentType, @PathVariable String id,
+  public void addStock(@PathVariable String portfolioName, @PathVariable String instrumentType, @PathVariable String id,
       @RequestBody Map<String, String> data) {
     Integer amount = Integer.valueOf(data.get("amount"));
     Instrument instrument = EquitySecurity.newStock(data.get("name"), id);
-    addInstrument(name, amount, instrument);
+
+    LOG.info("Adding {} of stock {} to portfolio {}", amount, instrument, portfolioName);
+    addInstrument(portfolioName, amount, instrument);
   }
 
   @Operation(summary = "Add an exchange traded fund to the portfolio")
   @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
-  @PostMapping(value = "{name}/etf/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "{portfolioName}/etf/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addETF(@PathVariable String name, @PathVariable String instrumentType, @PathVariable String id,
+  public void addETF(@PathVariable String portfolioName, @PathVariable String instrumentType, @PathVariable String id,
       @RequestBody Map<String, String> data) {
     Integer amount = Integer.valueOf(data.get("amount"));
     Instrument instrument = EquitySecurity.newETF(data.get("name"), id);
-    addInstrument(name, amount, instrument);
+    LOG.info("Adding {} of ETF {} to portfolio {}", amount, instrument, portfolioName);
+    addInstrument(portfolioName, amount, instrument);
   }
 
   @Operation(summary = "Add a bank deposit security to the portfolio")
   @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
-  @PostMapping(value = "{name}/deposit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "{portfolioName}/deposit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addDeposit(@PathVariable String name, @PathVariable String instrumentType, @PathVariable String id,
-      @RequestBody Map<String, String> data) {
+  public void addDeposit(@PathVariable String portfolioName, @PathVariable String instrumentType,
+      @PathVariable String id, @RequestBody Map<String, String> data) {
     Integer amount = Integer.valueOf(data.get("amount"));
     Double interestRate = Double.valueOf(data.get("interestRate"));
     LocalDate maturity = LocalDate.parse(data.get("maturity"));
     Instrument instrument = FixedIncomeSecurity.newDeposit(data.get("name"), id, maturity, interestRate);
-    addInstrument(name, amount, instrument);
+
+    LOG.info("Adding {} as direct bank deposit {} to portfolio {}", amount, instrument, portfolioName);
+    addInstrument(portfolioName, amount, instrument);
   }
 
   @Operation(summary = "Add a government bond to the portfolio")
   @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
-  @PostMapping(value = "{name}/govbond/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "{portfolioName}/govbond/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addGovernmentBond(@PathVariable String name, @PathVariable String instrumentType, @PathVariable String id,
-      @RequestBody Map<String, String> data) {
+  public void addGovernmentBond(@PathVariable String portfolioName, @PathVariable String instrumentType,
+      @PathVariable String id, @RequestBody Map<String, String> data) {
     Integer amount = Integer.valueOf(data.get("amount"));
     Double interestRate = Double.valueOf(data.get("interestRate"));
     LocalDate maturity = LocalDate.parse(data.get("maturity"));
     Instrument instrument = FixedIncomeSecurity.newTBond(data.get("name"), id, maturity, interestRate);
-    addInstrument(name, amount, instrument);
+
+    LOG.info("Adding {} government bonds {} to portfolio {}", amount, instrument, portfolioName);
+    addInstrument(portfolioName, amount, instrument);
   }
 
   @Operation(summary = "Add a pension fund security to the portfolio")
   @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
-  @PostMapping(value = "{name}/pension/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "{portfolioName}/pension/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addPensionFund(@PathVariable String name, @PathVariable String instrumentType, @PathVariable String id,
-      @RequestBody Map<String, String> data) {
+  public void addPensionFund(@PathVariable String portfolioName, @PathVariable String instrumentType,
+      @PathVariable String id, @RequestBody Map<String, String> data) {
     Integer amount = Integer.valueOf(data.get("amount"));
     Double interestRate = Double.valueOf(data.get("interestRate"));
     LocalDate maturity = LocalDate.parse(data.get("maturity"));
     Instrument instrument = FixedIncomeSecurity.newPensionFund(data.get("name"), id, maturity, interestRate);
-    addInstrument(name, amount, instrument);
+
+    LOG.info("Adding {} to pension fund {} to portfolio {}", amount, instrument, portfolioName);
+    addInstrument(portfolioName, amount, instrument);
   }
 
   private void addInstrument(String name, int amount, Instrument instrument) {

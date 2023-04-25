@@ -1,7 +1,10 @@
 package hu.zsomboro.ptracker.client;
 
+import java.time.LocalDate;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -16,6 +19,7 @@ import hu.zsomboro.ptracker.core.Price;
 @Component
 public class YahooPriceClient implements PriceClient, FxRateClient {
 
+  private static final Logger LOG = LoggerFactory.getLogger(YahooPriceClient.class);
   private static final String YAHOO_QUOTE_URL = "https://query2.finance.yahoo.com/v7/finance/quote";
   private static final String SYMBOL = "symbols";
   private static final String FIELDS = "fields";
@@ -31,12 +35,14 @@ public class YahooPriceClient implements PriceClient, FxRateClient {
   @Override
   public Price getTodayPrice(String identifier) {
     Result result = callAPIWithIdentifierInternal(identifier);
+    LOG.info("Fetching prices for instrument {} at {}", identifier, LocalDate.now());
     return new Price(result.getRegularMarketPrice(), result.getCurrency());
   }
 
   @Override
   public double getTodayFxRateToHUF(String fromCurrency) {
     Result result = callAPIWithIdentifierInternal(fromCurrency + "HUF=X");
+    LOG.info("Fetching HUF fx rates for currency {} at {}", fromCurrency, LocalDate.now());
     return result.getRegularMarketPrice();
   }
 

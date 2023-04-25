@@ -12,8 +12,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.PersistenceException;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,7 @@ import hu.zsomboro.ptracker.persistence.entity.EquitySecurityDO;
 import hu.zsomboro.ptracker.persistence.entity.FixedIncomeSecurityDO;
 import hu.zsomboro.ptracker.persistence.entity.InstrumentDO;
 import hu.zsomboro.ptracker.persistence.entity.PortfolioDO;
+import jakarta.persistence.PersistenceException;
 
 @DataJpaTest
 @ContextConfiguration

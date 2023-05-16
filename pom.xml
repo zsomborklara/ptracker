@@ -152,6 +152,7 @@
 						<image>eclipse-temurin</image>
 					</from>
 					<to>
+						 <!-- mvn compile jib:dockerBuild -Dgce-projectId=hu.zsomboro.ptracker -->
 						<image>gcr.io/${gce-projectId}/ptracker</image>
 					</to>
 				</configuration>

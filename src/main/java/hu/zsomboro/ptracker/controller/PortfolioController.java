@@ -60,7 +60,7 @@ public class PortfolioController {
   @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
   @PostMapping(value = "{portfolioName}/stock/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addStock(@PathVariable String portfolioName, @PathVariable String instrumentType, @PathVariable String id,
+  public void addStock(@PathVariable String portfolioName, @PathVariable String id,
       @RequestBody Map<String, String> data) {
     Integer amount = Integer.valueOf(data.get("amount"));
     Instrument instrument = EquitySecurity.newStock(data.get("name"), id);
@@ -73,7 +73,7 @@ public class PortfolioController {
   @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
   @PostMapping(value = "{portfolioName}/etf/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addETF(@PathVariable String portfolioName, @PathVariable String instrumentType, @PathVariable String id,
+  public void addETF(@PathVariable String portfolioName, @PathVariable String id,
       @RequestBody Map<String, String> data) {
     Integer amount = Integer.valueOf(data.get("amount"));
     Instrument instrument = EquitySecurity.newETF(data.get("name"), id);
@@ -85,8 +85,8 @@ public class PortfolioController {
   @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
   @PostMapping(value = "{portfolioName}/deposit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addDeposit(@PathVariable String portfolioName, @PathVariable String instrumentType,
-      @PathVariable String id, @RequestBody Map<String, String> data) {
+  public void addDeposit(@PathVariable String portfolioName, @PathVariable String id,
+      @RequestBody Map<String, String> data) {
     Integer amount = Integer.valueOf(data.get("amount"));
     Double interestRate = Double.valueOf(data.get("interestRate"));
     LocalDate maturity = LocalDate.parse(data.get("maturity"));
@@ -100,8 +100,8 @@ public class PortfolioController {
   @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
   @PostMapping(value = "{portfolioName}/govbond/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addGovernmentBond(@PathVariable String portfolioName, @PathVariable String instrumentType,
-      @PathVariable String id, @RequestBody Map<String, String> data) {
+  public void addGovernmentBond(@PathVariable String portfolioName, @PathVariable String id,
+      @RequestBody Map<String, String> data) {
     Integer amount = Integer.valueOf(data.get("amount"));
     Double interestRate = Double.valueOf(data.get("interestRate"));
     LocalDate maturity = LocalDate.parse(data.get("maturity"));
@@ -115,8 +115,8 @@ public class PortfolioController {
   @ApiResponse(responseCode = "204", description = "Portfolio updated, no content", content = { @Content })
   @PostMapping(value = "{portfolioName}/pension/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addPensionFund(@PathVariable String portfolioName, @PathVariable String instrumentType,
-      @PathVariable String id, @RequestBody Map<String, String> data) {
+  public void addPensionFund(@PathVariable String portfolioName, @PathVariable String id,
+      @RequestBody Map<String, String> data) {
     Integer amount = Integer.valueOf(data.get("amount"));
     Double interestRate = Double.valueOf(data.get("interestRate"));
     LocalDate maturity = LocalDate.parse(data.get("maturity"));

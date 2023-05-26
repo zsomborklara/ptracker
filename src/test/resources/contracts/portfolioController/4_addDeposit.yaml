@@ -1,0 +1,14 @@
+---
+request:
+  url: /tracker/portfolio/personal/deposit/DBTUSD
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    amount: 2000
+    interestRate: 2
+    maturity: "2030-01-01"
+    name: "USD DEBIT DEPOSIT"
+
+response:
+  status: 204

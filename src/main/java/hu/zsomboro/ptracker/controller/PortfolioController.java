@@ -128,8 +128,7 @@ public class PortfolioController {
 
   private void addInstrument(String name, int amount, Instrument instrument) {
     Portfolio portfolio = persistenceService.findPortfolio(name);
-    portfolio.add(instrument, amount);
-    persistenceService.savePortfolio(portfolio);
+    persistenceService.savePortfolio(portfolio.withInstrument(instrument, amount));
   }
 
 }

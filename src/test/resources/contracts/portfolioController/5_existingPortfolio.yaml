@@ -1,0 +1,27 @@
+---
+request:
+  url: /tracker/portfolio/personal
+  method: GET
+
+response:
+  status: 200
+  body:
+    constituents: 
+      - number: 2000
+        instrument:
+          name: "USD DEBIT DEPOSIT"
+          identifier: "DBTUSD"
+          instrumentType: "DEPOSIT"
+          maturity: "2030-01-01"
+          interestRate: 2.0
+      - number: 100
+        instrument:
+          name: "TREASURY BILL 2050/2"
+          identifier: "TBILL1"
+          instrumentType: "TREASURY_BOND"
+          maturity: "2040-02-15"
+          interestRate: 5 
+    cash:
+      amount: 0.0
+      currency: "HUF"
+    name: "personal"

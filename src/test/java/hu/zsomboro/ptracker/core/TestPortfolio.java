@@ -31,7 +31,7 @@ public class TestPortfolio {
   @Test
   public void testAddCashToPortfolio() {
     Cash cash = new Cash(100, "USD");
-    Portfolio mutated = initial.add(cash);
+    Portfolio mutated = initial.withCash(cash);
     assertEquals(2, mutated.getConstituents().size());
     assertEquals(cash, mutated.getCash());
   }
@@ -39,7 +39,7 @@ public class TestPortfolio {
   @Test
   public void testAddNewConstituentToPortfolio() {
     Instrument newInstrument = EquitySecurity.newETF("inst3", "INST3");
-    Portfolio mutated = initial.add(newInstrument, 10);
+    Portfolio mutated = initial.withInstrument(newInstrument, 10);
     assertEquals(3, mutated.getConstituents().size());
     assertNotNull(mutated.getConstituent(newInstrument));
     assertEquals(10, mutated.getConstituent(newInstrument).getNumber());
@@ -48,7 +48,7 @@ public class TestPortfolio {
   @Test
   public void testAddExistingConstituentToPortfolio() {
     Instrument newInstrument = EquitySecurity.newETF("inst1", "INST1");
-    Portfolio mutated = initial.add(newInstrument, 10);
+    Portfolio mutated = initial.withInstrument(newInstrument, 10);
     assertEquals(2, mutated.getConstituents().size());
     assertNotNull(mutated.getConstituent(newInstrument));
     assertEquals(20, mutated.getConstituent(newInstrument).getNumber());
@@ -58,7 +58,7 @@ public class TestPortfolio {
   public void testAddNewConstituentWithWrongNumber() {
     assertThrows(IllegalArgumentException.class, () -> {
       Instrument newInstrument = EquitySecurity.newETF("inst3", "INST3");
-      initial.add(newInstrument, -10);
+      initial.withInstrument(newInstrument, -10);
     });
   }
 

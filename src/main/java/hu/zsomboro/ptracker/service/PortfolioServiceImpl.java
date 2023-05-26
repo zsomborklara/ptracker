@@ -55,7 +55,20 @@ public class PortfolioServiceImpl implements PortfolioService {
   @Override
   @Transactional(propagation = Propagation.REQUIRED)
   public void savePortfolio(Portfolio portfolio) {
-    portfolioRepository.save(mapper.map(portfolio, PortfolioDO.class));
+
+    LOG.info("Saving portfolio {}", portfolio);
+
+    List<PortfolioDO> foundPortfolios = portfolioRepository.findByName(portfolio.getName());
+    PortfolioDO portfolioDO = mapper.map(portfolio, PortfolioDO.class);
+
+    if (foundPortfolios.isEmpty()) {
+      LOG.info("Portfolio {} is saved the first time", portfolio);
+      portfolioRepository.save(portfolioDO);
+    } else {
+      portfolioDO.setId(foundPortfolios.stream().map(PortfolioDO::getId).findFirst().get());
+      LOG.info("Portfolio {} exists with id {} and will be updated", portfolioDO.getId());
+      portfolioRepository.save(portfolioDO);
+    }
   }
 
   @Override

@@ -60,11 +60,11 @@ public class Portfolio {
     return constituents.stream().anyMatch(c -> c.instrument.equals(instrument));
   }
 
-  public Portfolio add(Cash cash) {
+  public Portfolio withCash(Cash cash) {
     return new Portfolio(constituents, cash, name);
   }
 
-  public Portfolio add(final Instrument instrument, int number) {
+  public Portfolio withInstrument(final Instrument instrument, int number) {
 
     final ImmutableSet.Builder<Constituent> builder = ImmutableSet.<Constituent>builder();
 
@@ -101,6 +101,11 @@ public class Portfolio {
 
   public Set<Constituent> getConstituents() {
     return constituents;
+  }
+
+  @Override
+  public String toString() {
+    return "Portfolio [name=" + name + "]";
   }
 
   private FluentIterable<Constituent> filter(Constituent existing) {

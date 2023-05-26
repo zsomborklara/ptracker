@@ -1,6 +1,6 @@
 ---
 request:
-  url: /tracker/portfolio/dummy
+  url: /tracker/portfolio/personal
   method: POST
 
 response:

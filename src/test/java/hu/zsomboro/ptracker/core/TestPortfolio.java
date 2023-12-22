@@ -42,7 +42,7 @@ public class TestPortfolio {
     Portfolio mutated = initial.withInstrument(newInstrument, 10);
     assertEquals(3, mutated.getConstituents().size());
     assertNotNull(mutated.getConstituent(newInstrument));
-    assertEquals(10, mutated.getConstituent(newInstrument).getNumber());
+    assertEquals(10, mutated.getConstituent(newInstrument).number());
   }
 
   @Test
@@ -51,7 +51,7 @@ public class TestPortfolio {
     Portfolio mutated = initial.withInstrument(newInstrument, 10);
     assertEquals(2, mutated.getConstituents().size());
     assertNotNull(mutated.getConstituent(newInstrument));
-    assertEquals(20, mutated.getConstituent(newInstrument).getNumber());
+    assertEquals(20, mutated.getConstituent(newInstrument).number());
   }
 
   @Test
@@ -84,7 +84,7 @@ public class TestPortfolio {
     Portfolio mutated = initial.remove(newInstrument, 5);
     assertEquals(2, mutated.getConstituents().size());
     assertNotNull(mutated.getConstituent(newInstrument));
-    assertEquals(5, mutated.getConstituent(newInstrument).getNumber());
+    assertEquals(5, mutated.getConstituent(newInstrument).number());
   }
 
 }

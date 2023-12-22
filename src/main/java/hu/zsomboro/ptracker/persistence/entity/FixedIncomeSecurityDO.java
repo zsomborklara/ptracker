@@ -41,7 +41,7 @@ public class FixedIncomeSecurityDO extends InstrumentDO {
   }
 
   public FixedIncomeSecurity toCoreObject() {
-    return (FixedIncomeSecurity) InstrumentType.valueOf(getInstrumentType()).create(getName(), getIdentifier(),
+    return (FixedIncomeSecurity) InstrumentType.valueOf(getInstrumentType()).createWithInterest(getName(), getInstrumentId(),
         getMaturity(), getInterestRate());
   }
 }

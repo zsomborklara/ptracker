@@ -5,17 +5,17 @@ import com.google.common.base.Preconditions;
 public abstract class Instrument {
 
   private final String name;
-  private final String identifier;
+  private final String instrumentId;
   private final InstrumentType instrumentType;
 
-  public Instrument(String name, String identifier, InstrumentType instrumentType) {
+  public Instrument(String name, String instrumentId, InstrumentType instrumentType) {
 
     Preconditions.checkNotNull(name, "Instrument name is missing");
-    Preconditions.checkNotNull(identifier, "Instrument identifier is missing");
+    Preconditions.checkNotNull(instrumentId, "Instrument identifier is missing");
     Preconditions.checkNotNull(instrumentType, "Instrument type is missing");
 
     this.name = name;
-    this.identifier = identifier;
+    this.instrumentId = instrumentId;
     this.instrumentType = instrumentType;
   }
 
@@ -23,8 +23,8 @@ public abstract class Instrument {
     return name;
   }
 
-  public String getIdentifier() {
-    return identifier;
+  public String getInstrumentId() {
+    return instrumentId;
   }
 
   public InstrumentType getInstrumentType() {
@@ -40,7 +40,7 @@ public abstract class Instrument {
 
     Instrument that = (Instrument) o;
 
-    if (!identifier.equals(that.identifier))
+    if (!instrumentId.equals(that.instrumentId))
       return false;
 
     return true;
@@ -48,7 +48,7 @@ public abstract class Instrument {
 
   @Override
   public int hashCode() {
-    return identifier.hashCode();
+    return instrumentId.hashCode();
   }
 
 }

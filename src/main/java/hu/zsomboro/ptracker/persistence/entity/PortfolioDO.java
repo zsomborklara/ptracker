@@ -13,12 +13,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
 
 @Entity
 public class PortfolioDO {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @SequenceGenerator(name = "portfoliodo_seq", initialValue = 1, allocationSize = 10)
   private long id;
   @OneToMany(targetEntity = ConstituentDO.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private Set<ConstituentDO> constituents;
@@ -27,9 +29,7 @@ public class PortfolioDO {
   @Column(unique = true)
   private String name;
 
-  public PortfolioDO(Set<ConstituentDO> constituents, CashDO cash, String name) {
-    this.constituents = Sets.newHashSet(constituents);
-    this.cash = cash;
+  public PortfolioDO(String name) {
     this.name = name;
   }
 

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import hu.zsomboro.ptracker.common.PriceMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,6 @@ import com.google.common.collect.Maps;
 
 import hu.zsomboro.ptracker.client.FxRateClient;
 import hu.zsomboro.ptracker.client.PriceClient;
-import hu.zsomboro.ptracker.common.CoreToPersistenceMapper;
 import hu.zsomboro.ptracker.core.Price;
 import hu.zsomboro.ptracker.core.security.HasPrice;
 import hu.zsomboro.ptracker.persistence.HufFxRateDORepository;
@@ -31,18 +31,15 @@ public class PriceLoaderServiceImpl implements PriceLoaderService {
 
   private final PriceDORepository priceRepository;
   private final HufFxRateDORepository fxRateRepository;
-  private final CoreToPersistenceMapper mapper;
   private final PortfolioService portfolioService;
   private final PriceClient priceClient;
   private final FxRateClient fxRateClient;
 
   public PriceLoaderServiceImpl(PriceDORepository priceRepository, HufFxRateDORepository fxRateRepository,
-      CoreToPersistenceMapper mapper, PortfolioService portfolioService, PriceClient priceClient,
-      FxRateClient fxRateClient) {
+      PortfolioService portfolioService, PriceClient priceClient, FxRateClient fxRateClient) {
     super();
     this.priceRepository = priceRepository;
     this.fxRateRepository = fxRateRepository;
-    this.mapper = mapper;
     this.portfolioService = portfolioService;
     this.priceClient = priceClient;
     this.fxRateClient = fxRateClient;
@@ -61,13 +58,13 @@ public class PriceLoaderServiceImpl implements PriceLoaderService {
 
       LOG.info("Found pricable instrument {} will try to fetch a price for it", priceableInstrument);
 
-      Price todayPrice = priceClient.getTodayPrice(priceableInstrument.getIdentifier());
+      Price todayPrice = priceClient.getTodayPrice(priceableInstrument.getInstrumentId());
 
       LOG.info("Found price {} for {}", todayPrice, priceableInstrument);
 
-      PriceDO priceDO = mapper.map(todayPrice, PriceDO.class);
+      PriceDO priceDO = PriceMapper.INSTANCE.priceToPriceDO(todayPrice);
       priceDO.setAsOfDate(LocalDate.now());
-      priceDO.setIdentifier(priceableInstrument.getIdentifier());
+      priceDO.setIdentifier(priceableInstrument.getInstrumentId());
       fetchedPrices.add(priceDO);
 
       if (!"HUF".equalsIgnoreCase(todayPrice.priceCurrency())

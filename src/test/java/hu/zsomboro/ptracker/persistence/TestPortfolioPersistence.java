@@ -1,11 +1,11 @@
 package hu.zsomboro.ptracker.persistence;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ContextConfiguration;
-
-import com.google.common.collect.Sets;
 
 import hu.zsomboro.ptracker.core.security.InstrumentType;
 import hu.zsomboro.ptracker.persistence.entity.CashDO;
@@ -41,50 +39,48 @@ public class TestPortfolioPersistence {
   @Autowired
   private InstrumentDORepository instrumentRepo;
 
-  private InstrumentDO i1 = new EquitySecurityDO("inst1", "INST1", "EXCHANGE_TRADED_FUND");
-  private InstrumentDO i2 = new FixedIncomeSecurityDO("inst2", "INST2", "STOCK", LocalDate.now(), 2.3d);
-
-  private ConstituentDO cdo1 = new ConstituentDO(i1, 10);
-  private ConstituentDO cdo2 = new ConstituentDO(i2, 20);
+  private final InstrumentDO i1 = new EquitySecurityDO("inst1", "INST1", "EXCHANGE_TRADED_FUND");
+  private final InstrumentDO i2 = new FixedIncomeSecurityDO("inst2", "INST2", "STOCK", LocalDate.now(), 2.3d);
 
   @Test
   public void testSavePortfolio() {
 
-    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("USD", 100.d),
-        "Dummy");
+    PortfolioDO portfolio = getPortfolioDO();
     portfolioRepo.save(portfolio);
     PortfolioDO newPortfolio = portfolioRepo.findById(portfolio.getId());
-    assertNotNull(newPortfolio);
-    assertEquals(portfolio.getId(), newPortfolio.getId());
-    assertEquals(portfolio.getCash(), newPortfolio.getCash());
+    assertThat(newPortfolio, notNullValue());
+    assertThat(newPortfolio.getId(), greaterThan(0L));
+    assertThat(portfolio.getId(), equalTo(newPortfolio.getId()));
+    assertThat(portfolio.getCash(), equalTo(newPortfolio.getCash()));
     Set<ConstituentDO> constituents = portfolio.getConstituents();
     Set<ConstituentDO> newConstituents = newPortfolio.getConstituents();
     for (ConstituentDO cdo : constituents) {
       boolean found = false;
       for (ConstituentDO newCdo : newConstituents) {
-        if (cdo.getId() == newCdo.getId()) {
+        if (cdo.getId().equals(newCdo.getId())) {
           found = true;
-          assertEquals(cdo.getInstrument().getName(), newCdo.getInstrument().getName());
-          assertEquals(cdo.getInstrument().getIdentifier(), newCdo.getInstrument().getIdentifier());
-          assertEquals(cdo.getInstrument().getInstrumentType(), newCdo.getInstrument().getInstrumentType());
-          assertEquals(cdo.getNumber(), newCdo.getNumber());
+          assertThat(cdo.getInstrument().getName(), equalTo(newCdo.getInstrument().getName()));
+          assertThat(cdo.getInstrument().getInstrumentId(), equalTo(newCdo.getInstrument().getInstrumentId()));
+          assertThat(cdo.getInstrument().getInstrumentType(), equalTo(newCdo.getInstrument().getInstrumentType()));
+          assertThat(cdo.getId(), equalTo(newCdo.getId()));
+          assertThat(newCdo.getId().getPortfolioId(), equalTo(newPortfolio.getId()));
+          assertThat(cdo.getNumber(), equalTo(newCdo.getNumber()));
           if (newCdo.getInstrument() instanceof FixedIncomeSecurityDO) {
-            assertEquals(((FixedIncomeSecurityDO) cdo.getInstrument()).getInterestRate(),
-                ((FixedIncomeSecurityDO) newCdo.getInstrument()).getInterestRate(), 1e-15);
-            assertEquals(((FixedIncomeSecurityDO) cdo.getInstrument()).getMaturity(),
-                ((FixedIncomeSecurityDO) newCdo.getInstrument()).getMaturity());
+            assertThat(((FixedIncomeSecurityDO) cdo.getInstrument()).getInterestRate(),
+                    closeTo(((FixedIncomeSecurityDO) newCdo.getInstrument()).getInterestRate(), 1e-15));
+            assertThat(((FixedIncomeSecurityDO) cdo.getInstrument()).getMaturity(),
+                    equalTo(((FixedIncomeSecurityDO) newCdo.getInstrument()).getMaturity()));
           }
         }
       }
-      assertTrue(found);
+      assertThat(found, equalTo(true));
     }
   }
 
   @Test
   public void testFindPortfolioByName() {
 
-    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("USD", 100.d),
-        "Dummy");
+    PortfolioDO portfolio = getPortfolioDO();
     portfolioRepo.save(portfolio);
     List<PortfolioDO> newPortfolio = portfolioRepo.findByName(portfolio.getName());
     assertThat(newPortfolio, hasSize(1));
@@ -94,30 +90,36 @@ public class TestPortfolioPersistence {
   @Test
   public void testPortfolioNameIsUnique() {
 
-    PortfolioDO portfolio1 = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("USD", 100.d),
-        "Dummy");
+    PortfolioDO portfolio1 = getPortfolioDO();
     entityManager.persistAndFlush(portfolio1);
     Assertions.assertThrows(PersistenceException.class, () -> {
-      PortfolioDO portfolio2 = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("USD", 100.d),
-          "Dummy");
+      PortfolioDO portfolio2 = getPortfolioDO();
       entityManager.persistAndFlush(portfolio2);
     });
-
   }
 
   @Test
   public void testGetStockInstruments() {
 
-    PortfolioDO portfolio = new PortfolioDO(Sets.<ConstituentDO>newHashSet(cdo1, cdo2), new CashDO("HUF", 0.d),
-        "Dummy");
+    PortfolioDO portfolio = getPortfolioDO();
     portfolioRepo.save(portfolio);
     final Collection<InstrumentDO> existingStocks = instrumentRepo
         .findByInstrumentType(InstrumentType.STOCK.toString());
-    assertEquals(1, existingStocks.size());
+    assertThat(existingStocks, hasSize(1));
     InstrumentDO stockInstrument = existingStocks.iterator().next();
-    assertEquals("STOCK", stockInstrument.getInstrumentType());
-    assertEquals("INST2", stockInstrument.getIdentifier());
-    assertEquals("inst2", stockInstrument.getName());
+    assertThat("STOCK", equalTo(stockInstrument.getInstrumentType()));
+    assertThat("INST2", equalTo(stockInstrument.getInstrumentId()));
+    assertThat("inst2", equalTo(stockInstrument.getName()));
 
+  }
+
+  private PortfolioDO getPortfolioDO() {
+    CashDO usd = new CashDO("USD", 100.d);
+    PortfolioDO portfolio = new PortfolioDO("Dummy");
+    ConstituentDO cdo1 = new ConstituentDO(i1, 10, portfolio);
+    ConstituentDO cdo2 = new ConstituentDO(i2, 20, portfolio);
+    portfolio.setCash(usd);
+    portfolio.setConstituents(Set.of(cdo1, cdo2));
+    return portfolio;
   }
 }

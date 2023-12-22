@@ -1,11 +1,14 @@
 package hu.zsomboro.ptracker.persistence;
 
+import hu.zsomboro.ptracker.persistence.entity.ConstituentId;
 import org.springframework.data.repository.CrudRepository;
 
 import hu.zsomboro.ptracker.persistence.entity.ConstituentDO;
 
-public interface ConstituentDORepository extends CrudRepository<ConstituentDO, Long> {
+import java.util.Optional;
 
-  ConstituentDO findById(long id);
+public interface ConstituentDORepository extends CrudRepository<ConstituentDO, ConstituentId> {
+
+  Optional<ConstituentDO> findById(ConstituentId id);
 
 }

@@ -44,7 +44,7 @@ public class PortfolioServiceImplTest {
     assertTrue(loadedPortfolio.hasInstrument(stock));
 
     FixedIncomeSecurity deposit = FixedIncomeSecurity.newDeposit("Deposit", "DP1", LocalDate.now(), 2);
-    Portfolio updatedPortfolio = portfolio.withInstrument(deposit, 100);
+    Portfolio updatedPortfolio = loadedPortfolio.withInstrument(deposit, 100);
 
     portfolioService.savePortfolio(updatedPortfolio);
 
@@ -65,14 +65,14 @@ public class PortfolioServiceImplTest {
     assertThat(loadedPortfolio.getConstituents(), hasSize(1));
     assertTrue(loadedPortfolio.hasInstrument(stock));
 
-    Portfolio updatedPortfolio = portfolio.withInstrument(stock, 100);
+    Portfolio updatedPortfolio = loadedPortfolio.withInstrument(stock, 100);
 
     portfolioService.savePortfolio(updatedPortfolio);
 
     loadedPortfolio = portfolioService.findPortfolio("TEST");
     assertThat(loadedPortfolio.getConstituents(), hasSize(1));
     assertTrue(loadedPortfolio.hasInstrument(stock));
-    assertThat(loadedPortfolio.getConstituent(stock).getNumber(), equalTo(110));
+    assertThat(loadedPortfolio.getConstituent(stock).number(), equalTo(110));
   }
 
   @Configuration

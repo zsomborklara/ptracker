@@ -10,14 +10,14 @@ response:
       - number: 2000
         instrument:
           name: "USD DEBIT DEPOSIT"
-          identifier: "DBTUSD"
+          instrumentId: "DBTUSD"
           instrumentType: "DEPOSIT"
           maturity: "2030-01-01"
           interestRate: 2.0
       - number: 100
         instrument:
           name: "TREASURY BILL 2050/2"
-          identifier: "TBILL1"
+          instrumentId: "TBILL1"
           instrumentType: "TREASURY_BOND"
           maturity: "2040-02-15"
           interestRate: 5 
@@ -25,3 +25,4 @@ response:
       amount: 0.0
       currency: "HUF"
     name: "personal"
+    id: 1

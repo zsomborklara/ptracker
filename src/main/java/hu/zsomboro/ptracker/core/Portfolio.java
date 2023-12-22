@@ -1,47 +1,29 @@
 package hu.zsomboro.ptracker.core;
 
-import java.util.Map;
-import java.util.Set;
-
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicates;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-
+import com.google.common.collect.*;
 import hu.zsomboro.ptracker.core.security.Instrument;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.google.common.base.Preconditions.*;
 
 public class Portfolio {
 
-  public static final Portfolio EMPTY = new Portfolio();
+  public static final Portfolio EMPTY = new Portfolio(ImmutableSet.of(), Cash.ZERO, "EMPTY", 0L);
 
   private final Set<Constituent> constituents;
   private final Cash cash;
   private final String name;
+  private final long id;
 
-  public Portfolio(Set<Constituent> constituents, Cash cash, String name) {
+  public Portfolio(Set<Constituent> constituents, Cash cash, String name, long id) {
     this.constituents = ImmutableSet.copyOf(constituents);
     this.cash = cash;
     this.name = name;
-  }
-
-  public Portfolio(Map<Instrument, Integer> instruments, Cash cash, String name) {
-    final ImmutableSet.Builder<Constituent> builder = ImmutableSet.<Constituent>builder();
-    instruments.entrySet().stream().map(e -> new Constituent(e.getValue(), e.getKey())).forEach(c -> builder.add(c));
-    constituents = builder.build();
-    this.cash = cash;
-    this.name = name;
-  }
-
-  private Portfolio() {
-    constituents = ImmutableSet.of();
-    cash = Cash.ZERO;
-    name = "EMPTY";
-  }
-
-  public Portfolio empty() {
-    return EMPTY;
+    this.id = id;
   }
 
   public Constituent getConstituent(Instrument instrument) {
@@ -61,24 +43,24 @@ public class Portfolio {
   }
 
   public Portfolio withCash(Cash cash) {
-    return new Portfolio(constituents, cash, name);
+    return new Portfolio(constituents, cash, name, id);
   }
 
   public Portfolio withInstrument(final Instrument instrument, int number) {
 
-    final ImmutableSet.Builder<Constituent> builder = ImmutableSet.<Constituent>builder();
+    final ImmutableSet.Builder<Constituent> builder = ImmutableSet.builder();
 
     Constituent current = getConstituent(instrument);
     if (current != null) {
 
-      builder.addAll(filter(current));
+      builder.addAll(filter(current).collect(Collectors.toList()));
       builder.add(current.add(number));
     } else {
       builder.addAll(constituents);
       builder.add(new Constituent(number, instrument));
     }
 
-    return new Portfolio(builder.build(), cash, name);
+    return new Portfolio(builder.build(), cash, name, id);
   }
 
   public Portfolio remove(Instrument instrument, int number) {
@@ -86,14 +68,14 @@ public class Portfolio {
     Constituent current = getConstituent(instrument);
 
     if (current != null) {
-      final ImmutableSet.Builder<Constituent> builder = ImmutableSet.<Constituent>builder();
-      builder.addAll(filter(current));
+      final ImmutableSet.Builder<Constituent> builder = ImmutableSet.builder();
+      builder.addAll(filter(current).collect(Collectors.toList()));
       Constituent substracted = current.substract(number);
       if (substracted.number != 0) {
         builder.add(substracted);
       }
       ImmutableSet<Constituent> newConstituents = builder.build();
-      return newConstituents.isEmpty() ? Portfolio.EMPTY : new Portfolio(newConstituents, cash, name);
+      return newConstituents.isEmpty() ? Portfolio.EMPTY : new Portfolio(newConstituents, cash, name, id);
     }
 
     return this;
@@ -108,51 +90,48 @@ public class Portfolio {
     return "Portfolio [name=" + name + "]";
   }
 
-  private FluentIterable<Constituent> filter(Constituent existing) {
-    return FluentIterable.from(constituents).filter(Predicates.not(Predicates.equalTo(existing)));
+  private Stream<Constituent> filter(Constituent existing) {
+    return constituents.stream().filter(Predicates.not(constituent -> Objects.equals(constituent, existing)));
   }
 
-  public class Constituent {
+  public long getId() {
+    return id;
+  }
 
-    private final int number;
-    private final Instrument instrument;
+  public record Constituent(int number, Instrument instrument) {
 
-    public Constituent(int number, Instrument instrument) {
-      Preconditions.checkNotNull(instrument, "Instrument is missing");
-      Preconditions.checkArgument(number >= 0, "Cannot set a negative number of instruments");
-      this.number = number;
-      this.instrument = instrument;
+    public Constituent {
+      checkNotNull(instrument, "Instrument is missing");
+      checkArgument(number >= 0, "Cannot set a negative number of instruments");
     }
 
     public Constituent add(int number) {
-      Preconditions.checkArgument(number >= 0, "Cannot add a negative number of instruments");
+      checkArgument(number >= 0, "Cannot add a negative number of instruments");
       return new Constituent(this.number + number, this.instrument);
     }
 
     public Constituent substract(int number) {
-      Preconditions.checkArgument(number > 0, "Cannot substract a negative number of instruments");
-      Preconditions.checkState(this.number >= number);
+      checkArgument(number > 0, "Cannot substract a negative number of instruments");
+      checkState(this.number >= number);
       return new Constituent(this.number - number, this.instrument);
-    }
-
-    public int getNumber() {
-      return number;
-    }
-
-    public Instrument getInstrument() {
-      return instrument;
     }
 
   }
 
   public static class Builder {
 
-    private Map<Instrument, Integer> instruments = Maps.newHashMap();
+    private final Set<Constituent> constituents = Sets.newHashSet();
     private Cash cash = Cash.ZERO;
     private String name;
+    private long id;
 
     public Builder withName(String name) {
       this.name = name;
+      return this;
+    }
+
+    public Builder withId(long id) {
+      this.id = id;
       return this;
     }
 
@@ -162,21 +141,26 @@ public class Portfolio {
     }
 
     public Builder add(Instrument instrument, int number) {
-      Integer current = instruments.get(instrument);
-      if (current != null) {
-        instruments.put(instrument, current + number);
+      Optional<Constituent> existing = constituents.stream().filter(c -> c.instrument.equals(instrument)).findFirst();
+      if(existing.isPresent()) {
+        Constituent constituent = existing.get();
+        constituents.remove(constituent);
+        constituents.add(constituent.add(number));
       } else {
-        instruments.put(instrument, number);
+        constituents.add(new Constituent(number, instrument));
       }
       return this;
     }
 
-    public Portfolio build() {
+    public Builder add(Constituent constituent) {
+      constituents.add(constituent);
+      return this;
+    }
 
-      Portfolio portfolio = new Portfolio(instruments, cash, name);
-      instruments.clear();
+    public Portfolio build() {
+      Portfolio portfolio = new Portfolio(constituents, cash, name, id);
+      constituents.clear();
       return portfolio;
     }
   }
-
 }

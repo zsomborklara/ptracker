@@ -10,13 +10,13 @@ import jakarta.persistence.InheritanceType;
 public class InstrumentDO {
 
   @Id
-  private String identifier;
+  private String instrumentId;
   private String instrumentType;
   private String name;
 
-  public InstrumentDO(String name, String identifier, String instrumentType) {
+  public InstrumentDO(String name, String instrumentId, String instrumentType) {
     this.name = name;
-    this.identifier = identifier;
+    this.instrumentId = instrumentId;
     this.instrumentType = instrumentType;
   }
 
@@ -32,12 +32,12 @@ public class InstrumentDO {
     this.name = name;
   }
 
-  public String getIdentifier() {
-    return identifier;
+  public String getInstrumentId() {
+    return instrumentId;
   }
 
-  public void setIdentifier(String identifier) {
-    this.identifier = identifier;
+  public void setInstrumentId(String instrumentId) {
+    this.instrumentId = instrumentId;
   }
 
   public String getInstrumentType() {

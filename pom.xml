@@ -8,23 +8,22 @@
 	<version>1.0-SNAPSHOT</version>
 	<properties>
 		<java.version>17</java.version>
-		<spring.boot.version>3.1.6</spring.boot.version>
-		<jakarta-servlet.version>5.0.0</jakarta-servlet.version>
+		<spring.boot.version>3.2.0</spring.boot.version>
+		<jakarta-servlet.version>6.0.0</jakarta-servlet.version>
 		<guava.version>32.1.3-jre</guava.version>
 		<hsqldb.version>2.7.2</hsqldb.version>
 		<slf4j-api.version>2.0.9</slf4j-api.version>
 		<log4j-slf4j-impl.version>2.22.0</log4j-slf4j-impl.version>
-		<jaxb-api.version>2.1</jaxb-api.version>
 		<springdoc-openapi.version>1.7.0</springdoc-openapi.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
-		<apache-httpclient.version>5.2.2</apache-httpclient.version>
+		<apache-httpclient.version>5.3</apache-httpclient.version>
 		<awaitility.version>4.2.0</awaitility.version>
-		<spring-cloud-contract.version>4.0.4</spring-cloud-contract.version>
-		<surefire-plugin.version>3.0.0</surefire-plugin.version>
-		<failsafe-plugin.version>3.0.0</failsafe-plugin.version>
-		<jib-plugin.version>3.3.1</jib-plugin.version>
+		<spring-cloud-contract.version>4.1.0</spring-cloud-contract.version>
+		<surefire-plugin.version>3.2.3</surefire-plugin.version>
+		<failsafe-plugin.version>3.2.3</failsafe-plugin.version>
+		<jib-plugin.version>3.4.0</jib-plugin.version>
 		<jacoco-plugin.version>0.8.11</jacoco-plugin.version>
-		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+		<maven-compiler-plugin.version>3.12.0</maven-compiler-plugin.version>
 	</properties>
 	<build>
 		<plugins>
@@ -47,6 +46,9 @@
 				<configuration>
 					<source>17</source>
 					<target>17</target>
+					<compilerArgs>
+						<arg>-parameters</arg>
+					</compilerArgs>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.mapstruct</groupId>
@@ -214,11 +216,6 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>${jaxb-api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hsqldb</groupId>

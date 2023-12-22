@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 public class PortfolioController {
 
   // swagger UI available on: http://localhost:8080/tracker/swagger-ui/index.html
-  private PortfolioService persistenceService;
+  private final PortfolioService persistenceService;
 
   private static final Logger LOG = LoggerFactory.getLogger(PortfolioController.class);
 

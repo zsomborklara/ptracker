@@ -35,11 +35,11 @@ public class FxRateServiceImplTest {
   public void testFindAllSavedFxRatesForDay() {
 
    fxRateService.saveHufFxRate(LocalDate.now(), "EUR", 300.d);
-    fxRateService.saveHufFxRate(LocalDate.now(), "USD", 290.d);
-    fxRateService.saveHufFxRate(LocalDate.now().plusDays(1), "PLN", 55.d);
-    Map<String, Double> fxRatesForDay = fxRateService.getAllFxRatesForDay(LocalDate.now());
+   fxRateService.saveHufFxRate(LocalDate.now(), "USD", 290.d);
+   fxRateService.saveHufFxRate(LocalDate.now().plusDays(1), "PLN", 55.d);
+   Map<String, Double> fxRatesForDay = fxRateService.getAllFxRatesForDay(LocalDate.now());
 
-    assertThat(fxRatesForDay).hasSize(2).containsKeys("EUR", "USD").containsValues(300.d, 290.d);
+   assertThat(fxRatesForDay).hasSize(2).containsKeys("EUR", "USD").containsValues(300.d, 290.d);
   }
 
   @Configuration

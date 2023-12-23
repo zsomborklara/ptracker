@@ -1,5 +1,7 @@
 package hu.zsomboro.ptracker.persistence.entity;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -37,14 +39,7 @@ public class FxRateId implements Serializable {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    FxRateId other = (FxRateId) obj;
-    return Objects.equals(asOfDate, other.asOfDate) && Objects.equals(isoCurrency, other.isoCurrency);
+    return  EqualsBuilder.reflectionEquals(this, obj);
   }
 
 }

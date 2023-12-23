@@ -1,9 +1,6 @@
 package hu.zsomboro.ptracker.service;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.closeTo;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -13,6 +10,7 @@ import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
 
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -75,25 +73,25 @@ public class PriceLoaderServiceTest {
     verify(priceRepository, times(1)).saveAll((Iterable<PriceDO>) collectionCaptor.capture());
     Iterator<?> capturedPrices = collectionCaptor.getValue().iterator();
     PriceDO firstPriceDO = (PriceDO) capturedPrices.next();
-    assertThat(firstPriceDO.getIdentifier(), equalTo("id1"));
-    assertThat(firstPriceDO.getPrice(), closeTo(2.d, 1e-14));
-    assertThat(firstPriceDO.getAsOfDate(), equalTo(today));
+    assertThat(firstPriceDO.getIdentifier()).isEqualTo("id1");
+    assertThat(firstPriceDO.getPrice()).isCloseTo(2.d, Offset.offset(1e-14));
+    assertThat(firstPriceDO.getAsOfDate()).isEqualTo(today);
 
     PriceDO secondPriceDO = (PriceDO) capturedPrices.next();
-    assertThat(secondPriceDO.getIdentifier(), equalTo("id2"));
+    assertThat(secondPriceDO.getIdentifier()).isEqualTo("id2");
 
     PriceDO thirdPriceDO = (PriceDO) capturedPrices.next();
-    assertThat(thirdPriceDO.getIdentifier(), equalTo("id3"));
-    assertFalse(capturedPrices.hasNext());
+    assertThat(thirdPriceDO.getIdentifier()).isEqualTo("id3");
+    assertThat(capturedPrices.hasNext()).isFalse();
 
     verify(fxRateRepository, times(1)).saveAll((Iterable<HufFxRateDO>) collectionCaptor.capture());
     Iterator<?> capturedFxRate = collectionCaptor.getValue().iterator();
     HufFxRateDO onlyRate = (HufFxRateDO) capturedFxRate.next();
-    assertThat(onlyRate.getIsoCurrency(), equalTo("USD"));
-    assertThat(onlyRate.getValue(), closeTo(234.d, 1e-14));
-    assertThat(onlyRate.getAsOfDate(), equalTo(today));
+    assertThat(onlyRate.getIsoCurrency()).isEqualTo("USD");
+    assertThat(onlyRate.getValue()).isCloseTo(234.d, Offset.offset(1e-14));
+    assertThat(onlyRate.getAsOfDate()).isEqualTo(today);
 
-    assertFalse(capturedFxRate.hasNext());
+    assertThat(capturedFxRate.hasNext()).isFalse();
 
   }
 

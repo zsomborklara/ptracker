@@ -1,6 +1,11 @@
 package hu.zsomboro.ptracker.service;
 
+import hu.zsomboro.ptracker.core.Price;
+import hu.zsomboro.ptracker.core.security.HasPrice;
+import hu.zsomboro.ptracker.persistence.PriceDORepository;
+import hu.zsomboro.ptracker.persistence.entity.PriceDO;
 import org.assertj.core.data.Offset;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -16,31 +21,68 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ContextConfiguration
-public class FxRateServiceImplTest {
+public class LoadedPriceServiceImplTest {
 
   @Autowired
-  private FxRateService fxRateService;
+  private LoadedPriceService loadedPriceService;
 
-  @Test
-  public void testSaveFxRate() {
+  @Autowired
+  private PriceDORepository priceDORepository;
 
-    String iso = "EUR";
-    fxRateService.saveHufFxRate(LocalDate.now(), iso, 300.d);
-    double hufFxRate = fxRateService.getHufFxRate(LocalDate.now(), iso);
-
-    assertThat(hufFxRate).isCloseTo(300.d, Offset.offset(1e-10));
+  @BeforeEach
+  public void init() {
+    insertPrice(10.d, "DUMMY1", LocalDate.now(), "HUF");
+    insertPrice(13.d, "DUMMY2", LocalDate.now(), "EUR");
+    insertPrice(22.1, "DUMMY2", LocalDate.now().plusDays(1), "EUR");
   }
 
   @Test
-  public void testFindAllSavedFxRatesForDay() {
+  public void testFindPriceAsOfDate() {
 
-   fxRateService.saveHufFxRate(LocalDate.now(), "EUR", 300.d);
-    fxRateService.saveHufFxRate(LocalDate.now(), "USD", 290.d);
-    fxRateService.saveHufFxRate(LocalDate.now().plusDays(1), "PLN", 55.d);
-    Map<String, Double> fxRatesForDay = fxRateService.getAllFxRatesForDay(LocalDate.now());
+    Price price = loadedPriceService.getPrice(LocalDate.now(), () -> "DUMMY1");
 
-    assertThat(fxRatesForDay).hasSize(2).containsKeys("EUR", "USD").containsValues(300.d, 290.d);
+    assertThat(price.value()).isCloseTo(10.d, Offset.offset(1e-12));
+    assertThat(price.priceCurrency()).isEqualTo("HUF");
   }
+
+  @Test
+  public void testFindPriceHistory() {
+
+    LocalDate firstDay = LocalDate.now();
+    LocalDate secondDay = LocalDate.now().plusDays(1);
+    Map<LocalDate, Price> priceHistory = loadedPriceService.getPriceHistory(() -> "DUMMY2");
+
+    assertThat(priceHistory).hasSize(2).containsKeys(firstDay, secondDay);
+
+    assertThat(priceHistory.get(firstDay).priceCurrency()).isEqualTo("EUR");
+    assertThat(priceHistory.get(secondDay).priceCurrency()).isEqualTo("EUR");
+    assertThat(priceHistory.get(firstDay).value()).isCloseTo(13.d, Offset.offset(1e-14));
+    assertThat(priceHistory.get(secondDay).value()).isCloseTo(22.1d, Offset.offset(1e-14));
+  }
+
+  @Test
+  public void testFindAllPricesForDay() {
+
+    LocalDate today = LocalDate.now();
+    Map<String, Price> prices = loadedPriceService.getAllPricesForDay(today);
+
+    assertThat(prices).hasSize(2).containsKeys("DUMMY1", "DUMMY2");
+
+    assertThat(prices.get("DUMMY1").priceCurrency()).isEqualTo("HUF");
+    assertThat(prices.get("DUMMY2").priceCurrency()).isEqualTo("EUR");
+    assertThat(prices.get("DUMMY1").value()).isCloseTo(10.d, Offset.offset(1e-14));
+    assertThat(prices.get("DUMMY2").value()).isCloseTo(13.d, Offset.offset(1e-14));
+  }
+
+  private void insertPrice(double price, String id, LocalDate asOf, String currency) {
+    PriceDO price1 = new PriceDO();
+    price1.setPrice(price);
+    price1.setIdentifier(id);
+    price1.setAsOfDate(asOf);
+    price1.setCurrency(currency);
+    priceDORepository.save(price1);
+  }
+
 
   @Configuration
   @EnableAutoConfiguration

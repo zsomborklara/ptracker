@@ -14,13 +14,30 @@ response:
           instrumentType: "DEPOSIT"
           maturity: "2030-01-01"
           interestRate: 2.0
+      - number: 850
+        instrument:
+          name: "S&P500"
+          instrumentId: "SPISIN"
+          instrumentType: "EXCHANGE_TRADED_FUND"
       - number: 100
         instrument:
           name: "TREASURY BILL 2050/2"
           instrumentId: "TBILL1"
           instrumentType: "TREASURY_BOND"
           maturity: "2040-02-15"
-          interestRate: 5 
+          interestRate: 5
+      - number: 2000
+        instrument:
+          name: "APPLE Inc."
+          instrumentId: "AAPL"
+          instrumentType: "STOCK"
+      - number: 300
+        instrument:
+          name: "PENSION FUND"
+          instrumentId: "DBTUSD"
+          instrumentType: "PENSION_FUND"
+          maturity: "2040-02-15"
+          interestRate: 5
     cash:
       amount: 0.0
       currency: "HUF"

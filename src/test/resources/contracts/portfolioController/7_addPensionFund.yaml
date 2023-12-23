@@ -1,0 +1,14 @@
+---
+request:
+  url: /tracker/portfolio/personal/pension/ALFA
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    amount: 300
+    interestRate: 5
+    maturity: "2040-02-15"
+    name: "PENSION FUND"
+
+response:
+  status: 204

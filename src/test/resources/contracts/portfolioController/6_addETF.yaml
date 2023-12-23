@@ -1,0 +1,12 @@
+---
+request:
+  url: /tracker/portfolio/personal/etf/SPISIN
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    amount: 850
+    name: "S&P500"
+
+response:
+  status: 204

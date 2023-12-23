@@ -1,0 +1,12 @@
+---
+request:
+  url: /tracker/portfolio/personal/stock/AAPL
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    amount: 2000
+    name: "APPLE Inc."
+
+response:
+  status: 204

@@ -44,6 +44,7 @@ public class PortfolioController {
   @PostMapping(value = "{name}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void createPortfolio(@PathVariable String name) {
+
     LOG.info("Creating new portfolio with name {}", name);
     persistenceService.newPortfolio(name);
   }
@@ -62,7 +63,8 @@ public class PortfolioController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addStock(@PathVariable String portfolioName, @PathVariable String id,
       @RequestBody Map<String, String> data) {
-    Integer amount = Integer.valueOf(data.get("amount"));
+
+    int amount = Integer.parseInt(data.get("amount"));
     Instrument instrument = EquitySecurity.newStock(data.get("name"), id);
 
     LOG.info("Adding {} of stock {} to portfolio {}", amount, instrument, portfolioName);
@@ -75,8 +77,10 @@ public class PortfolioController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addETF(@PathVariable String portfolioName, @PathVariable String id,
       @RequestBody Map<String, String> data) {
-    Integer amount = Integer.valueOf(data.get("amount"));
+
+    int amount = Integer.parseInt(data.get("amount"));
     Instrument instrument = EquitySecurity.newETF(data.get("name"), id);
+
     LOG.info("Adding {} of ETF {} to portfolio {}", amount, instrument, portfolioName);
     addInstrument(portfolioName, amount, instrument);
   }
@@ -87,8 +91,9 @@ public class PortfolioController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addDeposit(@PathVariable String portfolioName, @PathVariable String id,
       @RequestBody Map<String, String> data) {
-    Integer amount = Integer.valueOf(data.get("amount"));
-    Double interestRate = Double.valueOf(data.get("interestRate"));
+
+    int amount = Integer.parseInt(data.get("amount"));
+    double interestRate = Double.parseDouble(data.get("interestRate"));
     LocalDate maturity = LocalDate.parse(data.get("maturity"));
     Instrument instrument = FixedIncomeSecurity.newDeposit(data.get("name"), id, maturity, interestRate);
 
@@ -102,8 +107,9 @@ public class PortfolioController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addGovernmentBond(@PathVariable String portfolioName, @PathVariable String id,
       @RequestBody Map<String, String> data) {
-    Integer amount = Integer.valueOf(data.get("amount"));
-    Double interestRate = Double.valueOf(data.get("interestRate"));
+
+    int amount = Integer.parseInt(data.get("amount"));
+    double interestRate = Double.parseDouble(data.get("interestRate"));
     LocalDate maturity = LocalDate.parse(data.get("maturity"));
     Instrument instrument = FixedIncomeSecurity.newTBond(data.get("name"), id, maturity, interestRate);
 
@@ -117,8 +123,9 @@ public class PortfolioController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addPensionFund(@PathVariable String portfolioName, @PathVariable String id,
       @RequestBody Map<String, String> data) {
-    Integer amount = Integer.valueOf(data.get("amount"));
-    Double interestRate = Double.valueOf(data.get("interestRate"));
+
+    int amount = Integer.parseInt(data.get("amount"));
+    double interestRate = Double.parseDouble(data.get("interestRate"));
     LocalDate maturity = LocalDate.parse(data.get("maturity"));
     Instrument instrument = FixedIncomeSecurity.newPensionFund(data.get("name"), id, maturity, interestRate);
 

@@ -6,6 +6,7 @@ import java.util.Objects;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 @Entity
 @IdClass(FxRateId.class)
@@ -53,14 +54,7 @@ public class HufFxRateDO {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    HufFxRateDO other = (HufFxRateDO) obj;
-    return Objects.equals(asOfDate, other.asOfDate) && Objects.equals(isoCurrency, other.isoCurrency);
+    return EqualsBuilder.reflectionEquals(this, obj);
   }
 
 }

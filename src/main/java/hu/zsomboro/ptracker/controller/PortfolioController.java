@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +48,17 @@ public class PortfolioController {
 
     LOG.info("Creating new portfolio with name {}", name);
     persistenceService.newPortfolio(name);
+  }
+
+  @Operation(summary = "Delete an existing portfolio with the given name")
+  @ApiResponse(responseCode = "204", description = "Portfolio deleted", content = { @Content })
+  @DeleteMapping(value = "{name}")
+  @ResponseStatus(code = HttpStatus.NO_CONTENT)
+  public void deletePortfolio(@PathVariable String name) {
+
+    LOG.info("Deleting portfolio with name {}", name);
+    Portfolio portfolio = persistenceService.findPortfolio(name);
+    persistenceService.removePortfolio(portfolio);
   }
 
   @Operation(summary = "Return the portfolio by name. If it does not exist yet, return an empty portfolio")

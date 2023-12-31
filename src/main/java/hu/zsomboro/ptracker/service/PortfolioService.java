@@ -7,14 +7,14 @@ import hu.zsomboro.ptracker.core.security.HasPrice;
 
 public interface PortfolioService {
 
-  public Portfolio findPortfolio(String name);
+  Portfolio findPortfolio(String name);
 
-  public void savePortfolio(Portfolio portfolio);
+  void savePortfolio(Portfolio portfolio);
 
-  public void newPortfolio(String name);
+  void newPortfolio(String name);
 
-  public void removePortfolio(Portfolio portfolio);
+  void removePortfolio(Portfolio portfolio);
 
-  public Collection<HasPrice> getAllPriceableInstruments();
+  Collection<HasPrice> getAllPriceableInstruments();
 
 }

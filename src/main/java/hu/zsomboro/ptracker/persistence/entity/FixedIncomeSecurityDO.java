@@ -40,8 +40,4 @@ public class FixedIncomeSecurityDO extends InstrumentDO {
     this.maturity = maturity;
   }
 
-  public FixedIncomeSecurity toCoreObject() {
-    return (FixedIncomeSecurity) InstrumentType.valueOf(getInstrumentType()).createWithInterest(getName(), getInstrumentId(),
-        getMaturity(), getInterestRate());
-  }
 }

@@ -1,8 +1,6 @@
 package hu.zsomboro.ptracker.core;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
@@ -25,6 +23,9 @@ public class TestPortfolio {
     Portfolio.Builder builder = new Portfolio.Builder();
     builder.add(i1, 10);
     builder.add(i2, 5);
+    builder.add(new Cash(1000, "HUF"));
+    builder.withId(1);
+    builder.withName("Dummy");
     initial = builder.build();
   }
 
@@ -32,33 +33,51 @@ public class TestPortfolio {
   public void testAddCashToPortfolio() {
     Cash cash = new Cash(100, "USD");
     Portfolio mutated = initial.withCash(cash);
-    assertEquals(2, mutated.getConstituents().size());
-    assertEquals(cash, mutated.getCash());
+    assertThat(mutated.getConstituents()).hasSize(2);
+    assertThat(mutated.getCash()).isEqualTo(cash);
   }
 
   @Test
   public void testAddNewConstituentToPortfolio() {
     Instrument newInstrument = EquitySecurity.newETF("inst3", "INST3");
     Portfolio mutated = initial.withInstrument(newInstrument, 10);
-    assertEquals(3, mutated.getConstituents().size());
-    assertNotNull(mutated.getConstituent(newInstrument));
-    assertEquals(10, mutated.getConstituent(newInstrument).number());
+    assertThat(mutated.getConstituents()).hasSize(3);
+    assertThat(mutated.getConstituent(newInstrument)).isNotNull();
+    assertThat(mutated.getConstituent(newInstrument).number()).isEqualTo(10);
   }
 
   @Test
   public void testAddExistingConstituentToPortfolio() {
     Instrument newInstrument = EquitySecurity.newETF("inst1", "INST1");
     Portfolio mutated = initial.withInstrument(newInstrument, 10);
-    assertEquals(2, mutated.getConstituents().size());
-    assertNotNull(mutated.getConstituent(newInstrument));
-    assertEquals(20, mutated.getConstituent(newInstrument).number());
+    assertThat(mutated.getConstituents()).hasSize(2);
+    assertThat(mutated.getConstituent(newInstrument)).isNotNull();
+    assertThat(mutated.getConstituent(newInstrument).number()).isEqualTo(20);
   }
 
   @Test
   public void testAddNewConstituentWithWrongNumber() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      Instrument newInstrument = EquitySecurity.newETF("inst3", "INST3");
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+      Instrument newInstrument = EquitySecurity.newETF("inst1", "INST1");
       initial.withInstrument(newInstrument, -10);
+    });
+    assertThat(exception.getMessage()).isEqualTo("Cannot add a negative number of instruments");
+  }
+
+  @Test
+  public void testSubtractConstituentWithWrongNumber() {
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+      Instrument newInstrument = EquitySecurity.newETF("inst1", "INST1");
+      initial.remove(newInstrument, -30);
+    });
+    assertThat(exception.getMessage()).isEqualTo("Cannot subtract a negative number of instruments");
+  }
+
+  @Test
+  public void testSubtractConstituentWitMoreThanExists() {
+    assertThrows(IllegalStateException.class, () -> {
+      Instrument newInstrument = EquitySecurity.newETF("inst1", "INST1");
+      initial.remove(newInstrument, 3000);
     });
   }
 
@@ -66,25 +85,25 @@ public class TestPortfolio {
   public void testRemoveMissingConstituentFromPortfolio() {
     Instrument newInstrument = EquitySecurity.newETF("inst3", "INST3");
     Portfolio mutated = initial.remove(newInstrument, 10);
-    assertEquals(2, mutated.getConstituents().size());
-    assertNull(mutated.getConstituent(newInstrument));
+    assertThat(mutated.getConstituents()).hasSize(2);
+    assertThat(mutated.getConstituent(newInstrument)).isNull();
   }
 
   @Test
   public void testRemoveExistingConstituentFromPortfolio_Removed() {
     Instrument newInstrument = EquitySecurity.newETF("inst1", "INST1");
     Portfolio mutated = initial.remove(newInstrument, 10);
-    assertEquals(1, mutated.getConstituents().size());
-    assertNull(mutated.getConstituent(newInstrument));
+    assertThat(mutated.getConstituents()).hasSize(1);
+    assertThat(mutated.getConstituent(newInstrument)).isNull();
   }
 
   @Test
   public void testRemoveExistingConstituentFromPortfolio_Remains() {
     Instrument newInstrument = EquitySecurity.newETF("inst1", "INST1");
     Portfolio mutated = initial.remove(newInstrument, 5);
-    assertEquals(2, mutated.getConstituents().size());
-    assertNotNull(mutated.getConstituent(newInstrument));
-    assertEquals(5, mutated.getConstituent(newInstrument).number());
+    assertThat(mutated.getConstituents()).hasSize(2);
+    assertThat(mutated.getConstituent(newInstrument)).isNotNull();
+    assertThat(mutated.getConstituent(newInstrument).number()).isEqualTo(5);
   }
 
 }

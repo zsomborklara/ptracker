@@ -1,0 +1,13 @@
+---
+request:
+  url: /tracker/portfolio/dummy
+  method: GET
+
+response:
+  status: 200
+  body:
+    constituents: []
+    cash: {
+      amount: 0.0,
+      currency: "HUF"
+    }

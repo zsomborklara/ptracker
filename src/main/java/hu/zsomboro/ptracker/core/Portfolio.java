@@ -70,7 +70,7 @@ public class Portfolio {
     if (current != null) {
       final ImmutableSet.Builder<Constituent> builder = ImmutableSet.builder();
       builder.addAll(filter(current).collect(Collectors.toList()));
-      Constituent substracted = current.substract(number);
+      Constituent substracted = current.subtract(number);
       if (substracted.number != 0) {
         builder.add(substracted);
       }
@@ -110,8 +110,8 @@ public class Portfolio {
       return new Constituent(this.number + number, this.instrument);
     }
 
-    public Constituent substract(int number) {
-      checkArgument(number > 0, "Cannot substract a negative number of instruments");
+    public Constituent subtract(int number) {
+      checkArgument(number > 0, "Cannot subtract a negative number of instruments");
       checkState(this.number >= number);
       return new Constituent(this.number - number, this.instrument);
     }

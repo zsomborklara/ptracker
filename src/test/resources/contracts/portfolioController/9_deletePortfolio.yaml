@@ -1,0 +1,7 @@
+---
+request:
+  url: /tracker/portfolio/personal
+  method: DELETE
+
+response:
+  status: 204

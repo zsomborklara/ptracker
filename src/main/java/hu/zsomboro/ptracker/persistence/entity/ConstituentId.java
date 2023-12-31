@@ -1,6 +1,7 @@
 package hu.zsomboro.ptracker.persistence.entity;
 
 import jakarta.persistence.Embeddable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -37,13 +38,7 @@ public class ConstituentId implements Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    ConstituentId that = (ConstituentId) o;
-
-    if (portfolioId != that.portfolioId) return false;
-    return instrumentId.equals(that.instrumentId);
+    return EqualsBuilder.reflectionEquals(this, o);
   }
 
   @Override

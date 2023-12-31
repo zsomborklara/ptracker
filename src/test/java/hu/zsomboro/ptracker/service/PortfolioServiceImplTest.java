@@ -108,6 +108,13 @@ public class PortfolioServiceImplTest {
     assertThat(loadedPortfolio).isSameAs(Portfolio.EMPTY);
   }
 
+  @Test
+  public void testDeleteEmptyPortfolio_NoException() {
+    portfolioService.removePortfolio(Portfolio.EMPTY);
+    Portfolio portfolio = portfolioService.findPortfolio("IdontExist");
+    assertThat(portfolio).isSameAs(Portfolio.EMPTY);
+  }
+
   @Configuration
   @EnableAutoConfiguration
   @ComponentScan(basePackages = { "hu.zsomboro.ptracker.common", "hu.zsomboro.ptracker.service",

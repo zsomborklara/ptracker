@@ -8,10 +8,10 @@ import hu.zsomboro.ptracker.core.security.HasPrice;
 
 public interface LoadedPriceService {
 
-  public Price getPrice(LocalDate asOfDate, HasPrice pricedInstrument);
+  Price getPrice(LocalDate asOfDate, HasPrice pricedInstrument);
 
-  public Map<LocalDate, Price> getPriceHistory(HasPrice pricedInstrument);
+  Map<LocalDate, Price> getPriceHistory(HasPrice pricedInstrument);
 
-  public Map<String, Price> getAllPricesForDay(LocalDate asOfDate);
+  Map<String, Price> getAllPricesForDay(LocalDate asOfDate);
 
 }

@@ -5,10 +5,10 @@ import java.util.Map;
 
 public interface FxRateService {
 
-  public double getHufFxRate(LocalDate asOfDate, String forIsoCurrency);
+  double getHufFxRate(LocalDate asOfDate, String forIsoCurrency);
 
-  public void saveHufFxRate(LocalDate asOfDate, String forIsoCurrency, double value);
+  void saveHufFxRate(LocalDate asOfDate, String forIsoCurrency, double value);
 
-  public Map<String, Double> getAllFxRatesForDay(LocalDate asOfDate);
+  Map<String, Double> getAllFxRatesForDay(LocalDate asOfDate);
 
 }

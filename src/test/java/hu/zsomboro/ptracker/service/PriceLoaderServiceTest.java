@@ -14,14 +14,14 @@ import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
+
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import hu.zsomboro.ptracker.client.FxRateClient;
@@ -37,20 +37,19 @@ import hu.zsomboro.ptracker.persistence.entity.PriceDO;
 @ContextConfiguration
 public class PriceLoaderServiceTest {
 
-  @MockBean
+  @MockitoBean
   private PriceDORepository priceRepository;
-  @MockBean
+  @MockitoBean
   private HufFxRateDORepository fxRateRepository;
-  @MockBean
+  @MockitoBean
   private PortfolioService portfolioService;
-  @MockBean
+  @MockitoBean
   private PriceClient priceClient;
-  @MockBean
+  @MockitoBean
   private FxRateClient fxRateClient;
   @Autowired
   private PriceLoaderService priceLoaderService;
-  @Captor
-  private ArgumentCaptor<Iterable<?>> collectionCaptor;
+  private ArgumentCaptor<Iterable<?>> collectionCaptor = ArgumentCaptor.forClass((Class) Iterable.class);
 
   @SuppressWarnings("unchecked")
   @Test

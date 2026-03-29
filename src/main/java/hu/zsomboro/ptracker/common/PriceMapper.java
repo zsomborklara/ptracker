@@ -1,8 +1,6 @@
 package hu.zsomboro.ptracker.common;
 
-import hu.zsomboro.ptracker.core.Cash;
 import hu.zsomboro.ptracker.core.Price;
-import hu.zsomboro.ptracker.persistence.entity.CashDO;
 import hu.zsomboro.ptracker.persistence.entity.PriceDO;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;

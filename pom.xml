@@ -7,23 +7,23 @@
 	<artifactId>fin-planner</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>21</java.version>
 		<spring.boot.version>3.2.0</spring.boot.version>
 		<jakarta-servlet.version>6.0.0</jakarta-servlet.version>
-		<guava.version>32.1.3-jre</guava.version>
-		<hsqldb.version>2.7.2</hsqldb.version>
-		<slf4j-api.version>2.0.9</slf4j-api.version>
-		<log4j-slf4j-impl.version>2.22.0</log4j-slf4j-impl.version>
-		<springdoc-openapi.version>1.7.0</springdoc-openapi.version>
-		<mapstruct.version>1.5.5.Final</mapstruct.version>
-		<apache-httpclient.version>5.3</apache-httpclient.version>
+		<guava.version>33.5.0-jre</guava.version>
+		<hsqldb.version>2.7.4</hsqldb.version>
+		<slf4j-api.version>2.0.17</slf4j-api.version>
+		<log4j-slf4j-impl.version>2.25.4</log4j-slf4j-impl.version>
+		<springdoc-openapi.version>1.8.0</springdoc-openapi.version>
+		<mapstruct.version>1.6.3</mapstruct.version>
+		<apache-httpclient.version>5.6</apache-httpclient.version>
 		<awaitility.version>4.2.0</awaitility.version>
 		<spring-cloud-contract.version>4.1.0</spring-cloud-contract.version>
-		<surefire-plugin.version>3.2.3</surefire-plugin.version>
-		<failsafe-plugin.version>3.2.3</failsafe-plugin.version>
-		<jib-plugin.version>3.4.0</jib-plugin.version>
-		<jacoco-plugin.version>0.8.11</jacoco-plugin.version>
-		<maven-compiler-plugin.version>3.12.0</maven-compiler-plugin.version>
+		<surefire-plugin.version>3.5.5</surefire-plugin.version>
+		<failsafe-plugin.version>3.5.5</failsafe-plugin.version>
+		<jib-plugin.version>3.5.1</jib-plugin.version>
+		<jacoco-plugin.version>0.8.14</jacoco-plugin.version>
+		<maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
 		<itCoverageAgent></itCoverageAgent>
 	</properties>
 	<build>

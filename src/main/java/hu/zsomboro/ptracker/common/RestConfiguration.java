@@ -21,10 +21,10 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @Configuration
 public class RestConfiguration {
@@ -43,11 +43,10 @@ public class RestConfiguration {
   }
 
   @Bean
-  public RestTemplate restTemplate(HttpClient httpClient, ObjectMapper mapper) {
+  public RestTemplate restTemplate(HttpClient httpClient, JsonMapper mapper) {
     HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
     requestFactory.setHttpClient(httpClient);
-    MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-    converter.setObjectMapper(mapper);
+    JacksonJsonHttpMessageConverter converter = new JacksonJsonHttpMessageConverter(mapper);
     RestTemplate restTemplate = new RestTemplate(requestFactory);
     restTemplate.setMessageConverters(List.of(converter));
     return restTemplate;

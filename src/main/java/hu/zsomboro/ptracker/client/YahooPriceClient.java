@@ -47,7 +47,7 @@ public class YahooPriceClient implements PriceClient, FxRateClient {
   }
 
   private Result callAPIWithIdentifierInternal(String identifier) {
-    String urlTemplate = UriComponentsBuilder.fromHttpUrl(YAHOO_QUOTE_URL).queryParam(SYMBOL, "{" + SYMBOL + "}")
+    String urlTemplate = UriComponentsBuilder.fromUriString(YAHOO_QUOTE_URL).queryParam(SYMBOL, "{" + SYMBOL + "}")
         .queryParam(FIELDS, "{" + FIELDS + "}").encode().toUriString();
 
     ResponseEntity<YahooFinanceAPIResponse> response = this.restTemplate.exchange(urlTemplate, HttpMethod.GET, null,

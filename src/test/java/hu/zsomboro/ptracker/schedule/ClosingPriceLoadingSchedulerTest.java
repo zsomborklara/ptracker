@@ -8,25 +8,27 @@ import java.time.Duration;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import hu.zsomboro.ptracker.service.PriceLoaderService;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration
+@ContextConfiguration(classes = ClosingPriceLoadingSchedulerTest.TestConfig.class)
 @TestPropertySource(properties = "price.load.cron=*/2 * * ? * *")
 @EnableScheduling
-public class ClosingPriceLoadingSchedulerTest {
+class ClosingPriceLoadingSchedulerTest {
 
-  @MockBean
-  private PriceLoaderService priceLoaderSerivce;
+  @MockitoBean
+  private PriceLoaderService priceLoaderService;
 
-  @SpyBean
+  @MockitoSpyBean
   private ClosingPriceLoadingScheduler scheduler;
 
   @Test
@@ -35,4 +37,11 @@ public class ClosingPriceLoadingSchedulerTest {
         .untilAsserted(() -> verify(scheduler, atLeast(1)).loadPricesAndFxRates());
   }
 
+  @Configuration
+  static class TestConfig {
+    @Bean
+    ClosingPriceLoadingScheduler closingPriceLoadingScheduler(PriceLoaderService priceLoaderService) {
+      return new ClosingPriceLoadingScheduler(priceLoaderService);
+    }
+  }
 }

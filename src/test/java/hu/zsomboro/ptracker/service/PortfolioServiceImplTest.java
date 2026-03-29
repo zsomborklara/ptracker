@@ -10,19 +10,18 @@ import hu.zsomboro.ptracker.core.security.HasPrice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hu.zsomboro.ptracker.client.FxRateClient;
 import hu.zsomboro.ptracker.client.PriceClient;
 import hu.zsomboro.ptracker.core.Portfolio;
 import hu.zsomboro.ptracker.core.security.EquitySecurity;
 import hu.zsomboro.ptracker.core.security.FixedIncomeSecurity;
+import tools.jackson.databind.json.JsonMapper;
 
 @DataJpaTest
 @ContextConfiguration
@@ -132,8 +131,8 @@ public class PortfolioServiceImplTest {
     }
 
     @Bean
-    public ObjectMapper objectMapper() {
-      return new ObjectMapper();
+    public JsonMapper jsonMapper() {
+      return new JsonMapper();
     }
 
   }

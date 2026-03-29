@@ -1,18 +1,14 @@
 package hu.zsomboro.ptracker.service;
 
 import hu.zsomboro.ptracker.core.Price;
-import hu.zsomboro.ptracker.core.security.HasPrice;
 import hu.zsomboro.ptracker.persistence.PriceDORepository;
 import hu.zsomboro.ptracker.persistence.entity.PriceDO;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -20,7 +16,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@ContextConfiguration
+@Import(LoadedPriceServiceImpl.class)
 public class LoadedPriceServiceImplTest {
 
   @Autowired
@@ -81,15 +77,6 @@ public class LoadedPriceServiceImplTest {
     price1.setAsOfDate(asOf);
     price1.setCurrency(currency);
     priceDORepository.save(price1);
-  }
-
-
-  @Configuration
-  @EnableAutoConfiguration
-  @ComponentScan(basePackages = { "hu.zsomboro.ptracker.common", "hu.zsomboro.ptracker.service",
-      "hu.zsomboro.ptracker.persistence" })
-  public static class SpringServiceTestConfig {
-
   }
 
 }

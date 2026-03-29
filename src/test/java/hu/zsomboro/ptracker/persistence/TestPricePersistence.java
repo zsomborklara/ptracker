@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
 import hu.zsomboro.ptracker.persistence.entity.PriceDO;
@@ -112,7 +112,7 @@ public class TestPricePersistence {
     price3.setIdentifier("dummy");
     price3.setPrice(12.55d);
 
-    priceRepo.saveAll(List.of(price1, price2));
+    priceRepo.saveAll(List.of(price1, price2, price3));
 
     List<PriceDO> foundPrices = priceRepo.findByIdentifier(identifier);
 

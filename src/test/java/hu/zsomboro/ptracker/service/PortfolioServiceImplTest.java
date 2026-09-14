@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 import hu.zsomboro.ptracker.core.security.HasPrice;
 import org.junit.jupiter.api.Test;
@@ -112,6 +113,23 @@ public class PortfolioServiceImplTest {
     portfolioService.removePortfolio(Portfolio.EMPTY);
     Portfolio portfolio = portfolioService.findPortfolio("IdontExist");
     assertThat(portfolio).isSameAs(Portfolio.EMPTY);
+  }
+
+  @Test
+  public void testFindAllPortfolios() {
+    EquitySecurity stock = EquitySecurity.newStock("dummy", "DMY");
+    Portfolio portfolio1 = new Portfolio.Builder().withName("TEST1").add(stock, 10).build();
+
+    EquitySecurity etf = EquitySecurity.newETF("dummy2", "DMY2");
+    Portfolio portfolio2 = new Portfolio.Builder().withName("TEST2").add(etf, 20).build();
+
+    portfolioService.savePortfolio(portfolio1);
+    portfolioService.savePortfolio(portfolio2);
+
+    List<Portfolio> allPortfolio = portfolioService.findAllPortfolio();
+    assertThat(allPortfolio).hasSize(2);
+    assertThat(allPortfolio.get(0).getName()).isEqualTo(portfolio1.getName());
+    assertThat(allPortfolio.get(1).getName()).isEqualTo(portfolio2.getName());
   }
 
   @Configuration

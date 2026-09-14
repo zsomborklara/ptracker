@@ -83,6 +83,12 @@ public class PortfolioServiceImpl implements PortfolioService {
   }
 
   @Override
+  public List<Portfolio> findAllPortfolio() {
+    List<PortfolioDO> allPortfolios = portfolioRepository.findAll();
+    return allPortfolios.stream().map(PortfolioMapper.INSTANCE::portfolioDOToPortfolio).toList();
+  }
+
+  @Override
   public void newPortfolio(String name) {
     Portfolio newPortfolio = new Portfolio.Builder().withName(name).build();
     portfolioRepository.save(PortfolioMapper.INSTANCE.portfolioToPortfolioDO(newPortfolio));

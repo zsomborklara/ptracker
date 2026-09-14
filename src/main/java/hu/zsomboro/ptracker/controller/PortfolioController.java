@@ -1,6 +1,7 @@
 package hu.zsomboro.ptracker.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -67,6 +68,14 @@ public class PortfolioController {
   @GetMapping(value = "{name}", produces = MediaType.APPLICATION_JSON_VALUE)
   public Portfolio findPortfolio(@PathVariable String name) {
     return persistenceService.findPortfolio(name);
+  }
+
+  @Operation(summary = "Return all portfolios.")
+  @ApiResponse(responseCode = "200", description = "List of portfolios", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)) })
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<Portfolio> findAllPortfolios() {
+    return persistenceService.findAllPortfolio();
   }
 
   @Operation(summary = "Add a stock security to the portfolio")

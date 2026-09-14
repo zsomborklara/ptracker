@@ -1,6 +1,7 @@
 package hu.zsomboro.ptracker.service;
 
 import java.util.Collection;
+import java.util.List;
 
 import hu.zsomboro.ptracker.core.Portfolio;
 import hu.zsomboro.ptracker.core.security.HasPrice;
@@ -16,5 +17,7 @@ public interface PortfolioService {
   void removePortfolio(Portfolio portfolio);
 
   Collection<HasPrice> getAllPriceableInstruments();
+
+  List<Portfolio> findAllPortfolio();
 
 }

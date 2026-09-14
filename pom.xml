@@ -12,7 +12,7 @@
 		<jakarta-servlet.version>6.0.0</jakarta-servlet.version>
 		<guava.version>33.5.0-jre</guava.version>
 		<hsqldb.version>2.7.4</hsqldb.version>
-		<springdoc-openapi.version>1.8.0</springdoc-openapi.version>
+		<springdoc-openapi.version>3.0.2</springdoc-openapi.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 		<apache-httpclient.version>5.6</apache-httpclient.version>
 		<awaitility.version>4.2.0</awaitility.version>
@@ -250,7 +250,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>${springdoc-openapi.version}</version>
 		</dependency>
 		<dependency>

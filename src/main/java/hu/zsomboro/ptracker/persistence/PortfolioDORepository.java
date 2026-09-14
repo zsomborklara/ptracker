@@ -12,4 +12,6 @@ public interface PortfolioDORepository extends CrudRepository<PortfolioDO, Long>
 
   List<PortfolioDO> findByName(String name);
 
+  List<PortfolioDO> findAll();
+
 }

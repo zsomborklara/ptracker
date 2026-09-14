@@ -75,6 +75,9 @@ public class TestPortfolioPersistence {
       }
       assertThat(found, equalTo(true));
     }
+
+    List<PortfolioDO> allPortfolios = portfolioRepo.findAll();
+    assertThat(allPortfolios, hasSize(1));
   }
 
   @Test
